@@ -4,14 +4,13 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { isAuthenticatedState } from "../../../atoms/userState";
 import { auth } from "../../../../firebase";
 
-import Logo from "../../../assets/logo.svg";
 import styledComponent from "./Header.style";
 import Button from "../../atoms/Button";
+import Logo from "../../atoms/Logo";
 const {
   HeaderContainer,
   HeaderInner,
   HeaderRightMenu,
-  LogoLink,
   NavigationList,
   NavigationItem,
 } = styledComponent;
@@ -48,9 +47,8 @@ function Header() {
     <HeaderContainer>
       <HeaderInner>
         {/* 로고 */}
-        <LogoLink to="/">
-          <img src={Logo}></img>
-        </LogoLink>
+        <Logo />
+
         {/* 내비게이션 링크  */}
         <NavigationList>
           <NavigationItem to="/study-group">스터디그룹</NavigationItem>

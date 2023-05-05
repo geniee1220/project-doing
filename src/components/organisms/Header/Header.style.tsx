@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled.header`
   display: fixed;
   top: 0;
   left: 0;
@@ -18,6 +18,7 @@ const HeaderInner = styled.div`
   align-items: center;
   width: 100%;
   max-width: 1240px;
+  padding: 0 16px;
   margin: 0 auto;
 `;
 
@@ -25,11 +26,6 @@ const HeaderRightMenu = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
-`;
-
-const LogoLink = styled(Link)`
-  display: flex;
-  margin-right: 52px;
 `;
 
 const NavigationList = styled.nav`
@@ -49,7 +45,6 @@ const styledComponent = {
   HeaderContainer,
   HeaderInner,
   HeaderRightMenu,
-  LogoLink,
   NavigationList,
   NavigationItem,
 };
