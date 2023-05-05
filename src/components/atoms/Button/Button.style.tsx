@@ -1,13 +1,12 @@
 import styled, { css } from "styled-components";
 import { ButtonProps } from ".";
 
-// const selectedBgColor = selectedColor ? theme.bg[selectedColor] : "transparent";
-
 const handleButtonType = (props: ButtonProps) => {
   switch (props.buttonType) {
     case "primary":
       return css`
         background-color: ${(props) => props.theme.colors.primary};
+        color: #fff;
       `;
     case "secondary":
       return css`
@@ -30,7 +29,8 @@ const StyledButton = styled.button<ButtonProps>`
   justify-content: center;
   width: ${(props) => props.width || "100%"};
   height: ${(props) => props.height || "100%"};
-  border-radius: ${(props) => (props.rounded ? "16px" : null)};
+  font-size: 16px;
+  border-radius: ${(props) => (props.rounded ? "4px" : null)};
   background-color: ${(props) => props.theme.colors.white};
   white-space: nowrap;
   appearance: none;
