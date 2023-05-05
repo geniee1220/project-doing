@@ -1,17 +1,34 @@
 import React from "react";
-import styledComponent from "../Template.style";
 import Header from "../../organisms/Header";
-const { MainContainer, MainInner } = styledComponent;
 
-interface MainTemplateProps {
+import styledComponent from "../Template.style";
+const { MainContainer, PageTitle, MainInner, MainContents } = styledComponent;
+
+import Footer from "../../organisms/Footer";
+
+export interface MainTemplateCSSProps {
+  pageName?: string;
+  contentsWidth?: string;
+}
+interface MainTemplateProps extends MainTemplateCSSProps {
+  pageTitle?: string;
   children?: React.ReactNode;
 }
 
-function MainTemplate({ children }: MainTemplateProps) {
+function MainTemplate({
+  pageName,
+  pageTitle,
+  children,
+  contentsWidth,
+}: MainTemplateProps) {
   return (
     <MainContainer>
       <Header></Header>
-      <MainInner>{children}</MainInner>
+      <MainInner pageName={pageName}>
+        {pageTitle && <PageTitle>{pageTitle}</PageTitle>}
+        <MainContents contentsWidth={contentsWidth}>{children}</MainContents>
+      </MainInner>
+      <Footer></Footer>
     </MainContainer>
   );
 }
