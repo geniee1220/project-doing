@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 // react-query
 import { useMutation } from "react-query";
@@ -15,6 +15,10 @@ import { useForm } from "react-hook-form";
 
 // components
 import MainTemplate from "../components/templates/MainTemplate.tsx";
+import Input from "../components/atoms/Form/Input/index.tsx";
+import Textarea from "../components/atoms/Form/Textarea/index.tsx";
+import Button from "../components/atoms/Button/index.tsx";
+import ErrorMessage from "../components/atoms/Message/ErrorMessage/index.tsx";
 
 interface UserProps {
   nickname: string;
@@ -27,6 +31,7 @@ interface UserProps {
 function Register() {
   const firebaseStore = "users";
   const navigate = useNavigate();
+  const ref = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
 
   const [isRegistered, setIsRegistered] = useState(false);
   const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
@@ -65,6 +70,10 @@ function Register() {
   const { mutate, isLoading } = useMutation(registerUser, {
     onSuccess: () => {
       setIsRegistered(true);
+
+      if (isRegistered) {
+        navigate("/login");
+      }
     },
   });
 
@@ -84,27 +93,26 @@ function Register() {
         password: data.password,
         selfIntroduction: data.selfIntroduction,
       });
-
-      if (isRegistered) {
-        navigate("/login");
-      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log(errors);
-
   return (
-    <MainTemplate>
+    <MainTemplate
+      pageName={"register"}
+      pageTitle={"Doing 회원가입"}
+      contentsWidth="450px"
+    >
       <form
         style={{ display: "flex", flexDirection: "column" }}
         onSubmit={handleSubmit(onValid)}
       >
-        {/* 닉네임  */}
-        <input
+        {/* 닉네임 */}
+        <Input
           type="text"
-          placeholder="닉네임"
+          label="닉네임 *"
+          errors={errors}
           {...register("nickname", {
             required: "닉네임을 입력해주세요",
             minLength: {
@@ -112,13 +120,13 @@ function Register() {
               message: "닉네임은 2자리 이상이어야 합니다",
             },
           })}
-        />
-        <span>{errors?.nickname?.message as string}</span>
+        ></Input>
 
         {/* 이메일 */}
-        <input
+        <Input
           type="text"
-          placeholder="이메일"
+          label="이메일 *"
+          errors={errors}
           {...register("email", {
             required: "이메일을 입력해주세요",
             pattern: {
@@ -128,13 +136,17 @@ function Register() {
             validate: (value) => !value.includes("admin"),
           })}
         />
-        <span>{errors?.email?.message as string}</span>
-        {isAlreadyRegistered && "이미 가입된 이메일입니다"}
+        {isAlreadyRegistered && (
+          <ErrorMessage style={{ marginTop: "-13px", marginBottom: "18px" }}>
+            이미 가입된 이메일입니다
+          </ErrorMessage>
+        )}
 
         {/* 비밀번호 */}
-        <input
+        <Input
           type="password"
-          placeholder="비밀번호"
+          label="비밀번호 *"
+          errors={errors}
           {...register("password", {
             required: "비밀번호를 입력해주세요",
             minLength: {
@@ -143,22 +155,34 @@ function Register() {
             },
           })}
         />
-        <span>{errors?.password?.message as string}</span>
 
-        <input
+        <Input
           type="password"
-          placeholder="비밀번호 확인"
-          {...register("passwordConfirm")}
+          label="비밀번호 확인 *"
+          errors={errors}
+          {...register("passwordConfirm", {
+            required: "비밀번호를 확인해주세요",
+          })}
         />
-        <span>{errors?.passwordConfirm?.message as string}</span>
 
         {/* 자기소개 */}
-        <input placeholder="자기소개" {...register("selfIntroduction")} />
+        <Textarea
+          label="자기소개"
+          errors={errors}
+          {...register("selfIntroduction")}
+        />
 
-        {/* 제출 */}
-        <button type="submit" disabled={isLoading}>
+        {/* 회원가입 */}
+        <Button
+          type="submit"
+          width="100%"
+          height="50px"
+          buttonType="primary"
+          rounded={true}
+          disabled={isLoading}
+        >
           {isLoading ? "회원가입 중..." : "회원가입"}
-        </button>
+        </Button>
       </form>
     </MainTemplate>
   );
