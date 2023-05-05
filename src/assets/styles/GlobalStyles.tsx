@@ -3,12 +3,15 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyles = createGlobalStyle`
     :root {
         --header-height: 70px;
-        --footer-height: 300px;
+        --footer-height: 140px;
     }
 
   *,
   *::after,
   *::before {
+    margin: 0;
+    padding: 0;
+    outline: 0;
     box-sizing: border-box;
   }
 
