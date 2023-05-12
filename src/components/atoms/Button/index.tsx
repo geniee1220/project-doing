@@ -5,8 +5,8 @@ const { StyledButton } = styledComponent;
 // 버튼에 들어갈 속성
 export interface ButtonProps {
   children?: React.ReactNode;
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
   type?: "button" | "submit" | "reset"; // 버튼 타입
   buttonType?: "primary" | "secondary" | "tertiary" | "default"; // 버튼 테마
   rounded?: boolean; // 버튼 둥글게 처리 여부 true or false
