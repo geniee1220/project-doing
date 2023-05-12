@@ -13,11 +13,21 @@ export interface InputCSSProps {
 interface InputProps extends InputCSSProps {
   name?: string;
   label?: string;
+  placeholder?: string;
   errors?: any;
 }
 
 function Textarea(
-  { width, height, direction, name, label, errors, ...rest }: InputProps,
+  {
+    width,
+    height,
+    direction,
+    name,
+    label,
+    errors,
+    placeholder,
+    ...rest
+  }: InputProps,
   ref: React.Ref<HTMLTextAreaElement>
 ) {
   const errorKEY = errors?.[name as string]?.message as string;
@@ -29,6 +39,8 @@ function Textarea(
         id={name}
         name={name}
         className={errorKEY && "error"}
+        placeholder={placeholder}
+        spellCheck="false"
         ref={ref}
         {...rest}
       />

@@ -2,19 +2,27 @@ import React from "react";
 import styledComponent from "../Input.style";
 import { forwardRef } from "react";
 
-const { InputContainer, InputLabel, StyledInput, InputErrorMessage } =
-  styledComponent;
+const {
+  InputContainer,
+  InputLabel,
+  InputDescription,
+  StyledInput,
+  InputUnit,
+  InputErrorMessage,
+} = styledComponent;
 
 export interface InputCSSProps {
   width?: string;
   height?: string;
   direction?: string; // column:default, row
+  inputDescription?: string; // input 설명
 }
 interface InputProps extends InputCSSProps {
-  type?: string;
-  name?: string;
+  type?: string; // text:default, password, number, email, tel, url, search
+  name?: string; // label 그룹 이름
   placeholder?: string;
-  label?: string;
+  label?: string; // input 이름
+  inputUnit?: string; // input 단위
   errors?: any;
 }
 
@@ -22,11 +30,13 @@ function Input(
   {
     width,
     height,
-    placeholder,
     direction,
     type,
     name,
     label,
+    inputUnit,
+    inputDescription,
+    placeholder,
     errors,
     ...rest
   }: InputProps,
@@ -35,18 +45,26 @@ function Input(
   const errorKEY = errors?.[name as string]?.message as string;
 
   return (
-    <InputContainer width={width} direction={direction}>
+    <InputContainer direction={direction}>
       {label && <InputLabel htmlFor={name}>{label}</InputLabel>}
-      <StyledInput
-        id={name}
-        name={name}
-        className={errorKEY && "error"}
-        height={height}
-        type={type}
-        ref={ref}
-        placeholder={placeholder}
-        {...rest}
-      />
+      {inputDescription && (
+        <InputDescription>{inputDescription}</InputDescription>
+      )}
+      <div>
+        <StyledInput
+          type={type}
+          id={name}
+          name={name}
+          className={errorKEY && "error"}
+          width={width}
+          height={height}
+          ref={ref}
+          placeholder={placeholder}
+          spellCheck="false"
+          {...rest}
+        />
+        {inputUnit && <InputUnit>{inputUnit}</InputUnit>}
+      </div>
       {errorKEY && <InputErrorMessage>{errorKEY}</InputErrorMessage>}
     </InputContainer>
   );
