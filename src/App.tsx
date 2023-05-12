@@ -14,6 +14,8 @@ import StudyGroup from "./pages/StudyGroup";
 import MyLounge from "./pages/MyLounge";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import BoardDetail from "./pages/board/BoardDetail";
+import BoardRecruit from "./pages/board/BoardRecruit";
 
 import { auth } from "../firebase";
 
@@ -24,8 +26,14 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
+
+        {/* 스터디 그룹  */}
         <Route path="/study-group" element={<StudyGroup />} />
+        <Route path="/study-group/recruit" element={<BoardRecruit />} />
+        <Route path="/study-group/:id" element={<BoardDetail />} />
+
         <Route path="/my-lounge" element={<MyLounge />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
