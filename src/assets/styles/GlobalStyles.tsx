@@ -36,11 +36,28 @@ const GlobalStyles = createGlobalStyle`
     padding: 0;
     border: 0;
     font-size: 1.6rem;
+    letter-spacing: -0.8px;
 
     a {
         color:inherit;
         text-decoration: none;
     }
+  }
+
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; /* Some margin before the text */
+  }
+
+  input{
+    &::placeholder{
+      color: #aaa;
+    }
+  }
+
+  ul, ol, li {
+    list-style: none;
   }
 `;
 
