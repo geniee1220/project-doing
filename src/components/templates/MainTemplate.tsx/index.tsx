@@ -25,7 +25,8 @@ function MainTemplate({
     <MainContainer>
       <Header></Header>
       <MainInner pageName={pageName}>
-        {pageTitle && <PageTitle>{pageTitle}</PageTitle>}
+        {pageName == "login" ||
+          (pageName == "register" && <PageTitle>{pageTitle}</PageTitle>)}
         <MainContents contentsWidth={contentsWidth}>{children}</MainContents>
       </MainInner>
       <Footer></Footer>
