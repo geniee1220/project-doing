@@ -9,6 +9,7 @@ import {
   useRecoilState,
   useRecoilValue,
 } from "recoil";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import {
@@ -18,6 +19,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "react-query";
+import AuthProvider from "./apis/user/index.tsx";
 
 import { ThemeProvider } from "styled-components";
 import { theme } from "./assets/styles/theme";
@@ -27,15 +29,17 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
-        <BrowserRouter>
-          <ThemeProvider theme={theme}>
-            <GlobalStyles />
-            <App />
-          </ThemeProvider>
-        </BrowserRouter>
-      </RecoilRoot>
-    </QueryClientProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <RecoilRoot>
+          <BrowserRouter>
+            <ThemeProvider theme={theme}>
+              <GlobalStyles />
+              <App />
+            </ThemeProvider>
+          </BrowserRouter>
+        </RecoilRoot>
+      </QueryClientProvider>
+    </AuthProvider>
   </React.StrictMode>
 );
