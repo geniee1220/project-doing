@@ -36,6 +36,7 @@ const GlobalStyles = createGlobalStyle`
     padding: 0;
     border: 0;
     font-size: 1.6rem;
+    color:#333;
     letter-spacing: -0.8px;
 
     a {
@@ -59,6 +60,47 @@ const GlobalStyles = createGlobalStyle`
   ul, ol, li {
     list-style: none;
   }
+
+  a {
+    text-decoration: none;
+    color: #333; 
+  }
+
+  a:visited, a:focus, a:active {
+    text-decoration: none; 
+  }
+
+  label, input {
+    vertical-align: middle; 
+  }
+
+  img {
+    border: 0;
+    vertical-align: top;
+    max-width: 100%; 
+  }
+
+  button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: auto;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: normal;
+    -webkit-font-smoothing: inherit;
+    -moz-osx-font-smoothing: inherit;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+
+  button:focus {
+    outline: 0;
+  }
+
 `;
 
 export default GlobalStyles;
