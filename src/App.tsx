@@ -1,7 +1,6 @@
 import React from "react";
-import { useState } from "react";
-import { useRecoilState } from "recoil";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { usePosts } from "./apis/posts";
 
 // const Home = React.lazy(() => import("./pages/Home"));
 // const StudyGroup = React.lazy(() => import("./pages/StudyGroup"));
@@ -17,11 +16,10 @@ import Register from "./pages/Register";
 import BoardDetail from "./pages/board/BoardDetail";
 import BoardRecruit from "./pages/board/BoardRecruit";
 
-import { auth } from "../firebase";
-
-console.log(auth);
-
 function App() {
+  // 파이어베이스 게시글 불러오기
+  usePosts();
+
   return (
     <>
       <Routes>
