@@ -77,11 +77,10 @@ const placeHolder =
 //   모집 글 작성 페이지
 function BoardRecruit() {
   const firebaseStore = "posts";
-  const user = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [file, setFile] = useState<File | null>(null);
-  const [imgUrl, setImgUrl] = useState("");
   const [isImgUploading, setImgUploading] = useState(false);
   const [isLoading, setLoading] = useState<boolean | null>(null);
   const [showAlertModal, setShowAlertModal] = useState(false);
@@ -112,46 +111,39 @@ function BoardRecruit() {
   };
 
   // 이미지 업로드
-  const uploadImage = async (file: File | null) => {
-    if (file) {
-      setImgUploading(true);
-      const storageRef = ref(storage, `images/${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
+  const uploadImage = async (file: File) => {
+    setImgUploading(true);
+    const storageRef = ref(storage, `images/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
 
-      try {
-        await uploadTask;
-        const downloadURL = await getDownloadURL(storageRef);
-        setImgUrl(downloadURL);
-        setImgUploading(false);
-      } catch (error) {
-        console.error(error);
-        setImgUploading(false);
-      }
-    } else {
-      setImgUrl(
-        "https://firebasestorage.googleapis.com/v0/b/project-doing-feb9d.appspot.com/o/images%2Fbasic_cover.svg?alt=media&token=eac1399f-7c11-4f5e-a137-80eeda2ed88e"
-      );
+    try {
+      await uploadTask;
+      const downloadURL = await getDownloadURL(storageRef);
+      setImgUploading(false);
+      return downloadURL;
+    } catch (error) {
+      console.error(error);
+      setImgUploading(false);
+      return "";
     }
   };
 
   const addGroup = async (formData: any) => {
     const groupData = {
       id: doc(collection(db, firebaseStore)).id,
-      auther: user.currentUser,
+      auther: currentUser,
       title: formData.title,
-      create_date: createDate(),
-      update_date: createDate(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
       group_type: formData.groupType,
-      group_region: groupType === "오프라인" ? formData.groupRegion : "",
+      group_region: groupType === "오프라인" ? formData.region : "",
       member_count: formData.memberCount,
       description: formData.description,
-      imgUrl: imgUrl,
-      tag: [...formData.hashtag.split(",")],
+      imgUrl: formData.downloadURL,
+      tag: formData.hashtag ? formData.hashtag.split(",") : [],
       members: [],
       comments: [],
     };
-
-    console.log(formData);
 
     try {
       await addDoc(collection(db, firebaseStore), groupData);
@@ -165,10 +157,14 @@ function BoardRecruit() {
   const onSubmit = async (formData: any) => {
     setLoading(true);
 
-    file ? await uploadImage(file) : await uploadImage(null);
-
     try {
-      await mutate(formData);
+      if (file) {
+        const downloadURL = await uploadImage(file);
+        mutate({ ...formData, downloadURL });
+      } else {
+        mutate({ ...formData, downloadURL: "" });
+      }
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -178,7 +174,7 @@ function BoardRecruit() {
 
   // 로그인 안되어있으면 로그인 페이지로 이동
   useEffect(() => {
-    !user.currentUser && navigate("/login");
+    !currentUser && navigate("/login");
   }, []);
 
   // 로딩이 끝나면 확인 모달 팝업
@@ -253,11 +249,13 @@ function BoardRecruit() {
             width="60px"
             errors={errors}
             {...register("memberCount", {
-              required: "스터디 그룹의 최대 인원을 정해주세요",
+              required: "스터디 그룹의 인원을 정해주세요(최대 15명)",
               pattern: {
                 value: /^[0-9]*$/,
                 message: "숫자만 입력해주세요",
               },
+              min: "최소 1명 이상만 입력 가능합니다.",
+              max: "최대 15명까지만 입력 가능합니다.",
             })}
           ></Input>
 
