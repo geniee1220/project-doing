@@ -21,6 +21,11 @@ const CardContainer = styled.div`
       opacity: 0.3;
     }
 
+    svg {
+      fill: ${(props) => props.theme.colors.gray};
+      color ${(props) => props.theme.colors.gray};
+    }
+
     color: ${(props) => props.theme.colors.gray};
     pointer-events: none;
   }
@@ -103,7 +108,7 @@ const ClosedLayer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.05);
   border-radius: 4px;
   pointer-events: none;
 `;

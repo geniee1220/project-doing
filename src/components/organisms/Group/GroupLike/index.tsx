@@ -27,7 +27,36 @@ function GroupLike({ docId }: GroupLikeProps) {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
-  const [docData, setDocData] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchLikeStatus = async () => {
+      if (!currentUser) {
+        return;
+      }
+
+      try {
+        const likesCollectionRef = collection(db, "likes");
+        const currentUserQuery = query(
+          likesCollectionRef,
+          where("uid", "==", currentUser)
+        );
+        const currentUserSnapshot = await getDocs(currentUserQuery);
+
+        if (!currentUserSnapshot.empty) {
+          const likesData = currentUserSnapshot.docs[0].data();
+          const docData = likesData.docList;
+
+          if (docData.includes(docId)) {
+            setIsLiked(true);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching like status:", error);
+      }
+    };
+
+    fetchLikeStatus();
+  }, [currentUser, docId]);
 
   const handleLike = async () => {
     if (!currentUser) {
@@ -102,7 +131,11 @@ function GroupLike({ docId }: GroupLikeProps) {
 
   return (
     <GroupLikeButton onClick={handleLike}>
-      {isLiked ? <AiFillHeart /> : <AiOutlineHeart />}
+      {isLiked ? (
+        <AiFillHeart style={{ color: "#FF6262" }} />
+      ) : (
+        <AiOutlineHeart />
+      )}
     </GroupLikeButton>
   );
 }

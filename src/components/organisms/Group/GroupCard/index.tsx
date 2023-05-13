@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // icons
 import { IoArrowForward } from "react-icons/io5";
@@ -31,28 +31,15 @@ interface CardProps {
 function Card({ data, children }: CardProps) {
   const [isLoading, setIsLoading] = useState(true);
 
+  // 이미지 로딩 완료 시, 로딩 상태 변경
   const handleImageLoad = () => {
     setIsLoading(false);
   };
 
-  // console.log(data);
-
-  // // 폼 클릭시 날짜 가공 함수
-  // const createDate = () => {
-  //   const today = new Date();
-  //   const year = today.getFullYear().toString();
-  //   const month = (today.getMonth() + 1).toString();
-  //   const date = today.getDate().toString().padStart(2, "0");
-  //   const hour = today.getHours().toString().padStart(2, "0");
-  //   const minute = today.getMinutes().toString().padStart(2, "0");
-  //   return `${year}. ${month}. ${date} ${hour}:${minute}`;
-  // };
   return (
     <>
       <CardContainer
-        className={
-          data.members.length + 1 === data.member_count ? "closed" : ""
-        }
+        className={data.members.length + 1 == data.member_count ? "closed" : ""}
       >
         {/* 스켈레톤 이미지 - 로딩 후 이미지가 깜박거리는 것 방지  */}
         {data.imgUrl !== "" && isLoading && <SkeletonImage />}
@@ -68,9 +55,11 @@ function Card({ data, children }: CardProps) {
 
         <CardInner>
           <CardTitle>
+            {/* 좋아요  */}
             <GroupLike docId={data.id}></GroupLike>
+
+            {/* 타이틀 */}
             <Link to={`/study-group/${data.id}`}>
-              {/* 지역 & 타이틀 */}
               {data.group_type !== "온라인" ? (
                 <>
                   {data.group_region
@@ -108,7 +97,7 @@ function Card({ data, children }: CardProps) {
         </DetailLink>
 
         {/* 모집 마감 레이어*/}
-        {data.members.length + 1 === data.member_count && <ClosedLayer />}
+        {data.members.length + 1 == data.member_count && <ClosedLayer />}
       </CardContainer>
     </>
   );
