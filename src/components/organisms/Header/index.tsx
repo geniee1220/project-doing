@@ -17,7 +17,6 @@ const {
 
 function Header() {
   const navigate = useNavigate();
-  const params = useLocation();
 
   const [isAuthenticated, setIsAuthenticatedState] =
     useRecoilState(isAuthenticatedState);
