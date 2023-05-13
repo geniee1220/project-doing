@@ -21,6 +21,11 @@ const PaginationContainer = styled.div`
 
     a {
       display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      font-size: 14px;
       padding: 5px 10px;
       text-decoration: none;
       cursor: pointer;
