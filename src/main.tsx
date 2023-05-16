@@ -10,15 +10,9 @@ import {
   useRecoilValue,
 } from "recoil";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import AuthProvider from "./apis/user/index.tsx";
 
 import { ThemeProvider } from "styled-components";
