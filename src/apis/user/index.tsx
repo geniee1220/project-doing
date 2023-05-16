@@ -13,15 +13,16 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [currentUser, setCurrentUser] = useState(null);
 
+  const auth = getAuth();
+
   useEffect(() => {
-    const auth = getAuth();
     let currentUser;
 
     onAuthStateChanged(auth, (user: any) => {
       currentUser = user;
-      setCurrentUser(currentUser.uid);
+      setCurrentUser(currentUser?.uid);
     });
-  }, []);
+  }, [auth, setCurrentUser]);
 
   return (
     <AuthContext.Provider value={{ currentUser }}>

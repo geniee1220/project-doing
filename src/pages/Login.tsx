@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 
 // recoil
 import { useRecoilState } from "recoil";
@@ -27,6 +27,7 @@ import MainTemplate from "../components/templates/MainTemplate.tsx";
 import Input from "../components/atoms/Form/Input/index.tsx";
 import Button from "../components/atoms/Button/index.tsx";
 import ErrorMessage from "../components/atoms/Message/ErrorMessage/index.tsx";
+import { AuthContext } from "../apis/user/index.tsx";
 
 interface UserProps {
   nickname: string;
@@ -38,11 +39,9 @@ interface UserProps {
 function Login() {
   const firebaseStore = "users";
   const navigate = useNavigate();
-  const ref = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
-
+  const { currentUser } = useContext(AuthContext);
   const [isRegistered, setIsRegistered] = useState<boolean | null>(null);
 
-  const [globalUser, setGlobalUser] = useRecoilState(userState);
   const [isAuthenticated, setIsAuthenticatedState] =
     useRecoilState(isAuthenticatedState);
 
@@ -62,32 +61,6 @@ function Login() {
       setIsRegistered(false);
     }
 
-    // const firebaseUser = await signInWithEmailAndPassword(
-    //   auth,
-    //   user.email,
-    //   user.password
-    // );
-
-    // const userDoc = await getDoc(
-    //   doc(db, firebaseStore, firebaseUser.user?.uid)
-    // );
-    // const userData = userDoc.data();
-
-    // console.log("유저", user);
-    // console.log(userData);
-
-    // setGlobalUser({
-    //   nickname: user.nickname,
-    //   email: user.email,
-    //   password: user.password,
-    //   selfIntroduction: user.selfIntroduction,
-    // });
-
-    // setIsAuthenticatedState(true);
-    // localStorage.setItem("isAuthenticated", "true");
-    // console.log(globalUser);
-    // navigate("/");
-
     try {
       const firebaseUser = await signInWithEmailAndPassword(
         auth,
@@ -98,23 +71,14 @@ function Login() {
       const userDoc = await getDoc(
         doc(db, firebaseStore, firebaseUser.user?.uid)
       );
-      const userData = userDoc.data();
-
-      console.log("유저", user);
-      console.log(userData);
-
-      setGlobalUser({
-        nickname: user.nickname,
-        email: user.email,
-        password: user.password,
-        selfIntroduction: user.selfIntroduction,
-      });
 
       setIsRegistered(true);
       setIsAuthenticatedState(true);
       localStorage.setItem("isAuthenticated", "true");
-      console.log(globalUser);
+
       navigate("/");
+
+      return firebaseUser.user;
     } catch (error: any) {
       if (error.code === "auth/wrong-password") {
         setIsRegistered(false);
@@ -124,7 +88,30 @@ function Login() {
     }
   };
 
-  const { mutate, isLoading } = useMutation(loginUser);
+  const { mutate, isLoading } = useMutation(loginUser, {
+    onSuccess: async (firebaseUser) => {
+      if (!firebaseUser) {
+        return console.log("가입되지 않은 유저입니다.");
+      }
+
+      const usersCollectionRef = collection(db, "users");
+      const documentQuery = query(
+        usersCollectionRef,
+        where("uid", "==", firebaseUser.uid)
+      );
+      const docSnap = await getDocs(documentQuery);
+
+      const userData = docSnap.docs[0].data();
+
+      const modifiedUser = {
+        email: userData.email,
+        nickname: userData.nickname,
+        selfIntroduction: userData.selfIntroduction,
+      };
+
+      localStorage.setItem("user", JSON.stringify(modifiedUser));
+    },
+  });
 
   const onValid = (data: UserProps) => {
     mutate(data);
