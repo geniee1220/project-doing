@@ -3,8 +3,14 @@ import React, { useState, useRef, useCallback } from "react";
 // Components
 import { RiDragDropLine } from "react-icons/ri";
 import styledComponent from "./FileUploader.style";
-const { FileUploaderContainer, FileUploadInput, FileDropZone } =
-  styledComponent;
+const {
+  FileUploaderContainer,
+  FileUploadInput,
+  FileFunctionContainer,
+  FileDeleteButton,
+  FileUploaderLabel,
+  FileDropZone,
+} = styledComponent;
 import ErrorMessage from "../../atoms/Message/ErrorMessage";
 
 export interface FileUploaderCSSProps {
@@ -19,6 +25,7 @@ function FileUploader({ onFileSelected, className }: FileUploaderProps) {
   const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>();
   const [error, setError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [showImage, setShowImage] = useState(true);
 
   const handleFileUpload = (
     event:
@@ -27,6 +34,8 @@ function FileUploader({ onFileSelected, className }: FileUploaderProps) {
     setUrl: React.Dispatch<React.SetStateAction<string | undefined>>
   ) => {
     event.preventDefault();
+
+    setShowImage(true);
 
     // 드래그 이벤트
     if ("dataTransfer" in event) {
@@ -75,21 +84,26 @@ function FileUploader({ onFileSelected, className }: FileUploaderProps) {
     setIsHovered(false);
   };
 
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsHovered(false);
+    handleFileUpload(event, setThumbnailUrl);
+  };
+
+  const handleDeleteImage = () => {
+    setThumbnailUrl(undefined);
+    setShowImage(false);
+  };
+
   return (
     <FileUploaderContainer className={className}>
-      <FileUploadInput
-        type="file"
-        accept="image/*"
-        onChange={(event) => handleFileUpload(event, setThumbnailUrl)}
-      />
-
       <FileDropZone
         onDragOver={handleDragOver}
-        onDrop={(event) => handleFileUpload(event, setThumbnailUrl)}
+        onDrop={handleDrop}
         onDragLeave={handleDragLeave}
         className={isHovered ? "hover" : ""}
       >
-        {thumbnailUrl ? (
+        {showImage && thumbnailUrl ? (
           <img src={thumbnailUrl} alt="스터디 그룹 커버 이미지" />
         ) : (
           <>
@@ -102,6 +116,26 @@ function FileUploader({ onFileSelected, className }: FileUploaderProps) {
         )}
       </FileDropZone>
 
+      <FileFunctionContainer>
+        <FileUploadInput
+          id="fileUploader"
+          type="file"
+          accept="image/*"
+          onChange={(event) => handleFileUpload(event, setThumbnailUrl)}
+        />
+        <FileUploaderLabel htmlFor="fileUploader">
+          이미지 선택
+        </FileUploaderLabel>
+
+        {thumbnailUrl && (
+          <FileDeleteButton
+            className="deleteButton"
+            onClick={handleDeleteImage}
+          >
+            이미지 삭제
+          </FileDeleteButton>
+        )}
+      </FileFunctionContainer>
       {error && <ErrorMessage>이미지 파일만 업로드 가능합니다.</ErrorMessage>}
     </FileUploaderContainer>
   );

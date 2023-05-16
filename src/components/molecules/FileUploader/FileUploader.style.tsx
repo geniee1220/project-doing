@@ -17,6 +17,29 @@ const FileUploadInput = styled.input`
   display: none;
 `;
 
+const FileFunctionContainer = styled.div`
+  display: flex;
+  aign-items: center;
+  max-width: 700px;
+  gap: 0 10px;
+`;
+const FileUploaderLabel = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  border-radius: 4px;
+  border: 1px solid #000;
+  background-color: #fff;
+  color: #000;
+  font-size: 14px;
+  padding: 5px 10px;
+`;
+
+const FileDeleteButton = styled.button`
+  font-size: 14px;
+`;
+
 const FileDropZone = styled.div`
   display: flex;
   justify-content: center;
@@ -28,10 +51,12 @@ const FileDropZone = styled.div`
   border: 1px solid ${(props) => props.theme.colors.gray};
   border-radius: 4px;
   background-color: #f1f8fe;
+  overflow: hidden;
+
   img {
     width: 100%;
-    max-height: 100%;
-    background-size: cover;
+    height: 160px;
+    object-fit: cover;
   }
 
   .dragIcon {
@@ -48,6 +73,9 @@ const FileDropZone = styled.div`
 const styledComponent = {
   FileUploaderContainer,
   FileUploadInput,
+  FileFunctionContainer,
+  FileDeleteButton,
+  FileUploaderLabel,
   FileDropZone,
 };
 
