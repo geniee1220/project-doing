@@ -15,16 +15,25 @@ const InputLabel = styled.label<InputCSSProps>`
   margin-bottom: 5px;
 `;
 
-const commonInputStyle = css`
+const commonInputStyle = css<InputCSSProps>`
   width: 100%;
-  border-radius: 4px;
-  border: 1px solid #d8d8d8;
-  :focus-within {
-    border: 1px solid ${(props) => props.theme.colors.primary};
-  }
+  border: 0;
 
-  &.error {
-    border: 1px solid ${(props) => props.theme.colors.red};
+  ${(props) =>
+    props.focusStyle &&
+    css`
+      :focus-within {
+        border: 1px solid ${(props) => props.theme.colors.primary};
+      }
+    `}
+
+  ${InputContainer}:not(.search) & {
+    border-radius: 4px;
+    border: 1px solid #d8d8d8;
+
+    &.error {
+      border: 1px solid ${(props) => props.theme.colors.red};
+    }
   }
 `;
 
@@ -41,9 +50,9 @@ const StyledInput = styled.input<InputCSSProps>`
   height: ${(props) => props.height || "36px"};
 `;
 
-const StyledTextarea = styled.textarea`
+const StyledTextarea = styled.textarea<InputCSSProps>`
   ${commonInputStyle}
-  height: 180px;
+  height: ${(props) => props.height || "180px"};
   padding: 10px;
   resize: none;
   overflow-y: scroll;

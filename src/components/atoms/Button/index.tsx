@@ -8,7 +8,14 @@ export interface ButtonProps {
   width?: string;
   height?: string;
   type?: "button" | "submit" | "reset"; // 버튼 타입
-  buttonType?: "primary" | "secondary" | "tertiary" | "default"; // 버튼 테마
+  buttonType?:
+    | "primary"
+    | "secondary"
+    | "outline"
+    | "outline-black"
+    | "danger"
+    | "danger-outline"
+    | "default"; // 버튼 테마
   rounded?: boolean; // 버튼 둥글게 처리 여부 true or false
   color?: string; // 버튼 글씨 색상
   disabled?: boolean; // 비활성화 여부 true or false

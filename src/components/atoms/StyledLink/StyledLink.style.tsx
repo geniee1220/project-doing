@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { StyledLinkCSSProps } from ".";
 
 const StyledLink = styled(Link)<StyledLinkCSSProps>`
+  display: inline-flex;
   font-size: 14px;
 
   ${(props) =>

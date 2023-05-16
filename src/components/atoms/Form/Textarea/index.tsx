@@ -15,6 +15,7 @@ interface InputProps extends InputCSSProps {
   label?: string;
   placeholder?: string;
   errors?: any;
+  style?: React.CSSProperties;
 }
 
 function Textarea(
@@ -26,6 +27,7 @@ function Textarea(
     label,
     errors,
     placeholder,
+    style,
     ...rest
   }: InputProps,
   ref: React.Ref<HTMLTextAreaElement>
@@ -33,11 +35,12 @@ function Textarea(
   const errorKEY = errors?.[name as string]?.message as string;
 
   return (
-    <InputContainer width={width} height={height} direction={direction}>
+    <InputContainer width={width} direction={direction} style={style}>
       {label && <InputLabel htmlFor={name}>{label}</InputLabel>}
       <StyledTextarea
         id={name}
         name={name}
+        height={height}
         className={errorKEY && "error"}
         placeholder={placeholder}
         spellCheck="false"

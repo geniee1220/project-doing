@@ -12,13 +12,30 @@ const handleButtonType = (props: ButtonProps) => {
       return css`
         background-color: ${(props) => props.theme.colors.secondary};
       `;
-    case "tertiary":
+    case "outline":
       return css`
-        background-color: ${(props) => props.theme.colors.tertiary};
+        border: 1px solid ${(props) => props.theme.colors.primary};
+        color: ${(props) => props.theme.colors.primary};
+      `;
+    case `outline-black`:
+      return css`
+        border: 1px solid ${(props) => props.theme.colors.black};
+        color: ${(props) => props.theme.colors.black};
+      `;
+    case `danger`:
+      return css`
+        background-color: ${(props) => props.theme.colors.red};
+        color: #fff;
+      `;
+    case `danger-outline`:
+      return css`
+        border: 1px solid ${(props) => props.theme.colors.red};
+        color: ${(props) => props.theme.colors.red};
       `;
     case "default":
       return css`
         background-color: ${(props) => props.theme.colors.black};
+        color: #fff;
       `;
   }
 };

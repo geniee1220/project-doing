@@ -16,6 +16,8 @@ export interface InputCSSProps {
   height?: string;
   direction?: string; // column:default, row
   inputDescription?: string; // input 설명
+  ContainerClassName?: "search" | "";
+  focusStyle?: boolean;
 }
 interface InputProps extends InputCSSProps {
   type?: string; // text:default, password, number, email, tel, url, search
@@ -38,6 +40,7 @@ function Input(
     inputDescription,
     placeholder,
     errors,
+    ContainerClassName,
     ...rest
   }: InputProps,
   ref: React.Ref<HTMLInputElement>
@@ -45,7 +48,7 @@ function Input(
   const errorKEY = errors?.[name as string]?.message as string;
 
   return (
-    <InputContainer direction={direction}>
+    <InputContainer direction={direction} className={ContainerClassName}>
       {label && <InputLabel htmlFor={name}>{label}</InputLabel>}
       {inputDescription && (
         <InputDescription>{inputDescription}</InputDescription>
