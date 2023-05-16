@@ -10,9 +10,10 @@ const CardContainer = styled.div`
   padding: 20px 22px;
   border: 1px solid ${(props) => props.theme.colors.gray};
   border-radius: 4px;
-  margin-top: 20px;
-  &:first-child {
-    margin-top: 0;
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
   }
 
   &.closed {
@@ -93,6 +94,7 @@ const Tag = styled.span`
   border: 1px solid ${(props) => props.theme.colors.primary};
   background-color: ${(props) => props.theme.colors.secondary};
   color: ${(props) => props.theme.colors.primary};
+  cursor: pointer;
 
   ${CardContainer}.closed & {
     border: 1px solid ${(props) => props.theme.colors.gray};

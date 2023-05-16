@@ -50,8 +50,8 @@ function Header() {
 
         {/* 내비게이션 링크  */}
         <NavigationList>
-          <NavigationItem to="/study-group">스터디그룹</NavigationItem>
-          <NavigationItem to="/my-lounge">마이라운지</NavigationItem>
+          <NavigationItem to="/studygroup">스터디그룹</NavigationItem>
+          <NavigationItem to="/lounge/my">마이라운지</NavigationItem>
         </NavigationList>
 
         <HeaderRightMenu>

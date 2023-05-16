@@ -91,17 +91,11 @@ function GroupLike({ docId }: GroupLikeProps) {
       // 검색된 문서의 첫 번째 도큐먼트를 가져옴(유일한 도큐먼트기 때문에 가능)
       const likesData = currentUserSnapshot.docs[0].data();
       const docData = likesData.docList;
-      //   setDocData(docData);
-
-      // 컬렉션은 uid, docList:[docId, docId, docId] 형태로 저장
-      console.log(docData);
 
       // 2. 현재 게시글의 docId가 likes 컬렉션에 있는지 확인
       // docList에 현재 게시글의 docId이 있는지 확인해서 있으면 삭제, 없으면 추가
       if (docData.includes(docId)) {
         const filteredDocData = docData.filter((id: string) => id !== docId);
-
-        // console.log("filteredDocData", filteredDocData);
 
         await updateDoc(currentUserSnapshot.docs[0].ref, {
           docList: filteredDocData,
@@ -110,8 +104,6 @@ function GroupLike({ docId }: GroupLikeProps) {
         setIsLiked(false);
       } else {
         const newDocData = [...docData, docId];
-
-        // console.log("newDocData", newDocData);
 
         await updateDoc(currentUserSnapshot.docs[0].ref, {
           docList: newDocData,
@@ -125,9 +117,9 @@ function GroupLike({ docId }: GroupLikeProps) {
   };
 
   // 디버깅용 코드
-  useEffect(() => {
-    console.log("isLiked", isLiked);
-  }, [isLiked]);
+  //   useEffect(() => {
+  //     console.log("isLiked", isLiked);
+  //   }, [isLiked]);
 
   return (
     <GroupLikeButton onClick={handleLike}>

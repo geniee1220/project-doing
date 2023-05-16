@@ -8,7 +8,7 @@ const GroupContainer = styled.div`
   width: 100%;
   height: 100%;
   min-height: calc(100vh - var(--header-height) - var(--footer-height) - 500px);
-  margin-top: 20px;
+  // margin-top: 20px;
   padding-bottom: 36px;
 `;
 

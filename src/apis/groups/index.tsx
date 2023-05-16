@@ -1,72 +1,73 @@
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil";
-import { postsLoadingState, postsState } from "../../atoms/postState";
+import { groupsLoadingState, groupsState } from "../../atoms/groupState";
 
 import { db } from "../../../firebase";
-import { query, collection, getDocs, orderBy } from "firebase/firestore";
-
-interface commentModel {
-  uid: string;
-  nickname: string;
-  comment: string;
-  date: string;
-}
+import {
+  query,
+  collection,
+  getDocs,
+  orderBy,
+  Timestamp,
+} from "firebase/firestore";
 
 interface MemberModel {
   uid: string;
 }
 
-export interface PostModel {
+export interface GroupModel {
   id: string;
   title: string;
-  author: string;
-  createdAt: Date;
-  updatedAt: Date;
+  uid: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
   description: string;
   member_count: number;
   group_type: string;
   group_region?: string[];
   imgUrl: string;
   tag: string[];
-  members: commentModel[];
-  comments: commentModel[];
+  members: MemberModel[];
 }
 
-async function fetchPosts(): Promise<PostModel[]> {
+async function fetchGroups(): Promise<GroupModel[]> {
   try {
+    // groups 컬렉션의 모든 문서 가져오기
     const snapshot = await getDocs(
-      query(collection(db, "posts"), orderBy("updatedAt", "desc"))
+      query(collection(db, "groups"), orderBy("updatedAt", "desc"))
     );
 
-    const posts: PostModel[] = snapshot.docs.map(
+    const groups: GroupModel[] = snapshot.docs.map(
       (doc) =>
         ({
           id: doc.id,
           ...doc.data(),
-        } as PostModel)
+        } as GroupModel)
     );
 
-    return posts;
+    return groups;
   } catch (error) {
     console.log(error);
     return [];
   }
 }
 
-function usePosts() {
-  const [posts, setPosts] = useRecoilState(postsState);
-  const [isLoading, setLoading] = useRecoilState(postsLoadingState);
-  const query = useQuery<PostModel[] | undefined>("posts", fetchPosts, {
+function useGroups() {
+  const [groups, setGroups] = useRecoilState(groupsState);
+  const [isLoading, setLoading] = useRecoilState(groupsLoadingState);
+
+  // 데이터를 가져오는 쿼리
+  const query = useQuery<GroupModel[] | undefined>("groups", fetchGroups, {
     refetchOnWindowFocus: false,
   });
 
-  // 데이터가 업데이트 되면 posts 상태를 업데이트
+  // 데이터가 업데이트 되면 groups 상태를 업데이트
   useEffect(() => {
     if (query.data) {
-      setPosts(query.data);
+      setGroups(query.data);
     }
-  }, [query.data, setPosts]);
+  }, [query.data, setGroups]);
 
   // 로딩 상태가 바뀌면 로딩 상태를 업데이트
   useEffect(() => {
@@ -84,4 +85,4 @@ function usePosts() {
   };
 }
 
-export { usePosts };
+export { useGroups };

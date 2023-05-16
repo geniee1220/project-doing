@@ -4,7 +4,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useMutation } from "react-query";
 
 // firebase
-import { auth, storage, db } from "../../../firebase";
+import { auth, storage, db } from "../../../firebase.tsx";
 
 import {
   collection,
@@ -32,15 +32,14 @@ import { AuthContext } from "../../apis/user/index.tsx";
 import { useNavigate } from "react-router";
 
 // components
-import MainTemplate from "../../components/templates/MainTemplate.tsx";
-import SectionTemplate from "../../components/templates/SectionTemplate.tsx";
+import MainTemplate from "../../components/templates/MainTemplate.tsx/index.tsx";
+import SectionTemplate from "../../components/templates/SectionTemplate.tsx/index.tsx";
 import Button from "../../components/atoms/Button/index.tsx";
 import Input from "../../components/atoms/Form/Input/index.tsx";
 import Textarea from "../../components/atoms/Form/Textarea/index.tsx";
 import Radio from "../../components/atoms/Form/Radio/index.tsx";
 import CheckboxGroup from "../../components/atoms/Form/Checkbox/index.tsx";
 import FileUploader from "../../components/molecules/FileUploader/index.tsx";
-
 import Loader from "../../components/atoms/Loader/index.tsx";
 import AlertModal from "../../components/organisms/Modal/Alert/index.tsx";
 
@@ -75,8 +74,8 @@ const placeHolder =
   "스터디 그룹 소개\n - 스터디 그룹의 동기와 목표 \n - 어떤 식으로 진행이 될 예정인지 \n 스터디 그룹에 대한 모든 것을 소개해주세요";
 
 //   모집 글 작성 페이지
-function BoardRecruit() {
-  const firebaseStore = "posts";
+function GroupRecruit() {
+  const firebaseStore = "groups";
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -99,17 +98,6 @@ function BoardRecruit() {
     navigate(-1);
   };
 
-  // 폼 클릭시 날짜 가공 함수
-  const createDate = () => {
-    const today = new Date();
-    const year = today.getFullYear().toString();
-    const month = (today.getMonth() + 1).toString();
-    const date = today.getDate().toString().padStart(2, "0");
-    const hour = today.getHours().toString().padStart(2, "0");
-    const minute = today.getMinutes().toString().padStart(2, "0");
-    return `${year}. ${month}. ${date} ${hour}:${minute}`;
-  };
-
   // 이미지 업로드
   const uploadImage = async (file: File) => {
     setImgUploading(true);
@@ -130,19 +118,17 @@ function BoardRecruit() {
 
   const addGroup = async (formData: any) => {
     const groupData = {
-      id: doc(collection(db, firebaseStore)).id,
-      auther: currentUser,
+      uid: currentUser,
       title: formData.title,
       createdAt: new Date(),
       updatedAt: new Date(),
       group_type: formData.groupType,
       group_region: groupType === "오프라인" ? formData.region : "",
-      member_count: formData.memberCount,
+      member_count: formData.memberCount as number,
       description: formData.description,
       imgUrl: formData.downloadURL,
       tag: formData.hashtag ? formData.hashtag.split(",") : [],
       members: [],
-      comments: [],
     };
 
     try {
@@ -155,6 +141,11 @@ function BoardRecruit() {
   const { mutate } = useMutation(addGroup);
 
   const onSubmit = async (formData: any) => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -172,11 +163,6 @@ function BoardRecruit() {
     }
   };
 
-  // 로그인 안되어있으면 로그인 페이지로 이동
-  useEffect(() => {
-    !currentUser && navigate("/login");
-  }, []);
-
   // 로딩이 끝나면 확인 모달 팝업
   useEffect(() => {
     if (!isLoading && isLoading !== null) {
@@ -185,17 +171,17 @@ function BoardRecruit() {
   }, [isLoading]);
 
   // 디버깅 코드(콘솔)
-  useEffect(() => {
-    const subscription = watch((value, { name, type }) =>
-      console.log(value, name, type)
-    );
+  // useEffect(() => {
+  //   const subscription = watch((value, { name, type }) =>
+  //     console.log(value, name, type)
+  //   );
 
-    return () => subscription.unsubscribe();
-  }, [watch]);
+  //   return () => subscription.unsubscribe();
+  // }, [watch]);
 
-  useEffect(() => {
-    console.log("file", file);
-  }, [file]);
+  // useEffect(() => {
+  //   console.log("file", file);
+  // }, [file]);
 
   return (
     <MainTemplate pageName="studyGroupRecruit">
@@ -254,8 +240,14 @@ function BoardRecruit() {
                 value: /^[0-9]*$/,
                 message: "숫자만 입력해주세요",
               },
-              min: "최소 1명 이상만 입력 가능합니다.",
-              max: "최대 15명까지만 입력 가능합니다.",
+              min: {
+                value: 2,
+                message: "최소 1명 이상만 입력 가능합니다.",
+              },
+              max: {
+                value: 15,
+                message: "최대 15명까지만 입력 가능합니다.",
+              },
             })}
           ></Input>
 
@@ -312,4 +304,4 @@ function BoardRecruit() {
   );
 }
 
-export default BoardRecruit;
+export default GroupRecruit;
