@@ -1,0 +1,136 @@
+├── .DS_Store
+├── .eslintrc.cjs
+├── .gitignore
+├── .treerc
+├── firebase.tsx
+├── index.html
+├── package-lock.json
+├── package.json
+├── public
+│  ├── .DS_Store
+│  ├── banner
+│  │  ├── .DS_Store
+│  │  ├── main_banner1.png
+│  │  ├── main_banner2.png
+│  │  └── main_banner3.png
+│  └── logo.svg
+├── README.md
+├── src
+│  ├── .DS_Store
+│  ├── apis
+│  │  ├── comments
+│  │  │  └── index.tsx
+│  │  ├── groups
+│  │  │  └── index.tsx
+│  │  └── user
+│  │    ├── index.tsx
+│  │    └── model.ts
+│  ├── App.tsx
+│  ├── assets
+│  │  ├── logo.svg
+│  │  └── styles
+│  │    ├── custom.d.ts
+│  │    ├── GlobalStyles.tsx
+│  │    ├── style.d.ts
+│  │    └── theme.ts
+│  ├── atoms
+│  │  ├── groupState.tsx
+│  │  └── userState.tsx
+│  ├── components
+│  │  ├── atoms
+│  │  │  ├── Button
+│  │  │  │  ├── Button.style.tsx
+│  │  │  │  └── index.tsx
+│  │  │  ├── FIlter
+│  │  │  │  ├── Filter.style.tsx
+│  │  │  │  └── index.tsx
+│  │  │  ├── Form
+│  │  │  │  ├── Checkbox
+│  │  │  │  │  └── index.tsx
+│  │  │  │  ├── Input
+│  │  │  │  │  └── index.tsx
+│  │  │  │  ├── Input.style.tsx
+│  │  │  │  ├── Radio
+│  │  │  │  │  └── index.tsx
+│  │  │  │  └── Textarea
+│  │  │  │    └── index.tsx
+│  │  │  ├── Loader
+│  │  │  │  ├── index.tsx
+│  │  │  │  └── Loader.style.tsx
+│  │  │  ├── Logo
+│  │  │  │  ├── index.tsx
+│  │  │  │  └── Logo.style.tsx
+│  │  │  ├── Message
+│  │  │  │  └── ErrorMessage
+│  │  │  │    ├── ErrorMessage.style.tsx
+│  │  │  │    └── index.tsx
+│  │  │  ├── SkeletonImage
+│  │  │  │  └── index.tsx
+│  │  │  └── StyledLink
+│  │  │    ├── index.tsx
+│  │  │    └── StyledLink.style.tsx
+│  │  ├── molecules
+│  │  │  ├── FileUploader
+│  │  │  │  ├── FileUploader.style.tsx
+│  │  │  │  └── index.tsx
+│  │  │  └── SearchBar
+│  │  │    ├── index.tsx
+│  │  │    └── SearchBar.style.tsx
+│  │  ├── organisms
+│  │  │  ├── Carousel
+│  │  │  │  ├── Carousel.style.tsx
+│  │  │  │  └── index.tsx
+│  │  │  ├── Comment
+│  │  │  │  ├── Comment.style.tsx
+│  │  │  │  └── index.tsx
+│  │  │  ├── Footer
+│  │  │  │  ├── Footer.style.tsx
+│  │  │  │  └── index.tsx
+│  │  │  ├── Group
+│  │  │  │  ├── Group.style.tsx
+│  │  │  │  ├── GroupApproval
+│  │  │  │  │  ├── GroupApproval.style.tsx
+│  │  │  │  │  └── index.tsx
+│  │  │  │  ├── GroupCard
+│  │  │  │  │  ├── Card.style.tsx
+│  │  │  │  │  └── index.tsx
+│  │  │  │  ├── GroupLike
+│  │  │  │  │  ├── GroupLike.style.tsx
+│  │  │  │  │  └── index.tsx
+│  │  │  │  └── GroupList
+│  │  │  │    ├── GroupList.style.tsx
+│  │  │  │    └── index.tsx
+│  │  │  ├── Header
+│  │  │  │  ├── Header.style.tsx
+│  │  │  │  └── index.tsx
+│  │  │  ├── Modal
+│  │  │  │  ├── Alert
+│  │  │  │  │  └── index.tsx
+│  │  │  │  ├── Confirm
+│  │  │  │  │  └── index.tsx
+│  │  │  │  └── Modal.style.tsx
+│  │  │  └── Pagination
+│  │  │    ├── index.tsx
+│  │  │    └── Pagination.style.tsx
+│  │  └── templates
+│  │    ├── MainTemplate.tsx
+│  │    │  └── index.tsx
+│  │    ├── SectionTemplate.tsx
+│  │    │  └── index.tsx
+│  │    └── Template.style.tsx
+│  ├── main.tsx
+│  ├── pages
+│  │  ├── group
+│  │  │  ├── GroupDetail.tsx
+│  │  │  ├── GroupEdit.tsx
+│  │  │  └── GroupRecruit.tsx
+│  │  ├── Home.tsx
+│  │  ├── Login.tsx
+│  │  ├── MyLounge.tsx
+│  │  ├── Register.tsx
+│  │  └── StudyGroup.tsx
+│  └── vite-env.d.ts
+├── tsconfig.json
+├── tsconfig.node.json
+├── vite.config.ts
+└── yarn.lock
