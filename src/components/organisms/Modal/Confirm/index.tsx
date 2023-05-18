@@ -12,8 +12,7 @@ const {
 
 interface ConfirmModalProps {
   title: string;
-  message: string;
-
+  message: string | React.ReactNode;
   onConfirm: () => void;
   onCancel: () => void;
 }
