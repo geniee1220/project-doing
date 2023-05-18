@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { isAuthenticatedState } from "../../../atoms/userState";
+import { isAuthenticatedState, userState } from "../../../atoms/userState";
 import { auth } from "../../../../firebase";
 
 import styledComponent from "./Header.style";
@@ -21,6 +21,8 @@ function Header() {
   const [isAuthenticated, setIsAuthenticatedState] =
     useRecoilState(isAuthenticatedState);
 
+  const user = useRecoilValue(userState);
+
   const routeChange = (routePath: string) => {
     navigate(`/${routePath}`);
   };
@@ -30,6 +32,7 @@ function Header() {
       await auth.signOut();
       setIsAuthenticatedState(false);
       localStorage.setItem("isAuthenticated", "false");
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -56,13 +59,34 @@ function Header() {
 
         <HeaderRightMenu>
           {isAuthenticated ? (
-            <Button
-              width="fit-content"
-              height="38px"
-              onClick={() => handleLogout()}
-            >
-              Logout
-            </Button>
+            <>
+              <span
+                aria-label="유저 닉네임"
+                style={{
+                  borderRight: "1px solid #e6e6e6",
+                  paddingRight: "10px",
+                }}
+              >
+                <span
+                  style={{
+                    marginRight: "10px",
+                    fontWeight: "600",
+                    cursor: "default",
+                  }}
+                >
+                  {user?.nickname}
+                </span>
+                님
+              </span>
+              <Button
+                width="fit-content"
+                height="38px"
+                style={{ border: "1px solid black", marginLeft: "20px" }}
+                onClick={() => handleLogout()}
+              >
+                Logout
+              </Button>
+            </>
           ) : (
             <>
               <Button
