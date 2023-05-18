@@ -34,8 +34,14 @@ function Card({ data, children }: CardProps) {
   const location = useLocation();
 
   const titleContent =
-    data.group_type !== "온라인" ? (
+    data.group_type === "오프라인" ? (
       <>
+        {data.group_region?.map((region: string) => `[${region}]`).join(" ")}{" "}
+        {data.title}
+      </>
+    ) : data.group_type === "전체" ? (
+      <>
+        [온라인]{" "}
         {data.group_region?.map((region: string) => `[${region}]`).join(" ")}{" "}
         {data.title}
       </>
