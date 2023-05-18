@@ -12,7 +12,8 @@ import {
   Timestamp,
 } from "firebase/firestore";
 
-interface MemberModel {
+export interface ApplicantModel {
+  nickname: string;
   uid: string;
 }
 
@@ -28,7 +29,8 @@ export interface GroupModel {
   group_region?: string[];
   imgUrl: string;
   tag: string[];
-  members: MemberModel[];
+  members: string[];
+  applicants: ApplicantModel[];
 }
 
 async function fetchGroups(): Promise<GroupModel[]> {

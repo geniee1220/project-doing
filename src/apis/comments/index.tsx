@@ -34,7 +34,6 @@ async function fetchComments(): Promise<CommentModel[]> {
     const comments: CommentModel[] = snapshot.docs.map(
       (doc) =>
         ({
-          id: doc.id,
           ...doc.data(),
         } as CommentModel)
     );
