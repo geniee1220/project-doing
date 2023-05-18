@@ -11,6 +11,7 @@ import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 // react-router
 import { useNavigate } from "react-router";
 
+// react-hook-form
 import { useForm } from "react-hook-form";
 
 // components
@@ -26,12 +27,13 @@ interface UserProps {
   password: string;
   passwordConfirm?: string;
   selfIntroduction?: string;
+  tag?: string;
 }
 
 function Register() {
   const firebaseStore = "users";
   const navigate = useNavigate();
-  const ref = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+  // const ref = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
 
   const [isRegistered, setIsRegistered] = useState(false);
   const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
@@ -63,17 +65,14 @@ function Register() {
       email: user.email,
       password: user.password,
       selfIntroduction: user.selfIntroduction,
+      tag: user.tag ? user.tag.split(",") : [],
     });
     return firebaseUser;
   };
 
   const { mutate, isLoading } = useMutation(registerUser, {
     onSuccess: () => {
-      setIsRegistered(true);
-
-      if (isRegistered) {
-        navigate("/login");
-      }
+      navigate("/login");
     },
   });
 
@@ -92,6 +91,7 @@ function Register() {
         email: data.email,
         password: data.password,
         selfIntroduction: data.selfIntroduction,
+        tag: data.tag,
       });
     } catch (error) {
       console.log(error);
@@ -172,14 +172,30 @@ function Register() {
           {...register("selfIntroduction")}
         />
 
+        {/* 태그  */}
+        <Input
+          type="text"
+          label="태그"
+          inputDescription="❗태그와 태그는 콤마(,) 로 구분해주세요"
+          placeholder="태그, 태그, 태그"
+          width="488px"
+          errors={errors}
+          {...register("tag", {
+            pattern: {
+              value: /^[가-힣a-zA-Z\s,]+$/,
+              message: "콤마(,)를 제외한 특수문자는 들어갈 수 없습니다",
+            },
+          })}
+        ></Input>
+
         {/* 회원가입 */}
         <Button
           type="submit"
           width="100%"
           height="50px"
           buttonType="primary"
-          rounded={true}
           disabled={isLoading}
+          rounded
         >
           {isLoading ? "회원가입 중..." : "회원가입"}
         </Button>
