@@ -64,6 +64,7 @@ function Input(
           ref={ref}
           placeholder={placeholder}
           spellCheck="false"
+          autoComplete="off"
           {...rest}
         />
         {inputUnit && <InputUnit>{inputUnit}</InputUnit>}
