@@ -18,6 +18,7 @@ import GroupDetail from "./pages/group/GroupDetail";
 import { useComments } from "./apis/comments";
 import { useRecoilState } from "recoil";
 import { userState } from "./atoms/userState";
+import GroupEdit from "./pages/group/GroupEdit";
 
 function App() {
   // 유저 정보 불러오기
@@ -43,7 +44,7 @@ function App() {
         {/* 스터디 그룹  */}
         <Route path="/studygroup" element={<StudyGroup />} />
         <Route path="/studygroup/recruit" element={<GroupRecruit />} />
-        <Route path="/studygroup/edit/:id" element={<GroupRecruit />} />
+        <Route path="/studygroup/edit/:id" element={<GroupEdit />} />
         <Route path="/studygroup/:id" element={<GroupDetail />} />
 
         <Route path="/lounge/my" element={<MyLounge />} />
