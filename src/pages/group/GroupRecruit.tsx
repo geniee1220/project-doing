@@ -42,6 +42,7 @@ import CheckboxGroup from "../../components/atoms/Form/Checkbox/index.tsx";
 import FileUploader from "../../components/molecules/FileUploader/index.tsx";
 import Loader from "../../components/atoms/Loader/index.tsx";
 import AlertModal from "../../components/organisms/Modal/Alert/index.tsx";
+import { useGroups } from "../../apis/groups/index.tsx";
 
 // 하위 컴포넌트로 전달할 상수 props
 const radioOptions = [
@@ -83,15 +84,21 @@ function GroupRecruit() {
   const [isImgUploading, setImgUploading] = useState(false);
   const [isLoading, setLoading] = useState<boolean | null>(null);
   const [showAlertModal, setShowAlertModal] = useState(false);
+  const { data: groups } = useGroups();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
     watch,
   } = useForm({ mode: "onBlur" });
 
   const groupType = watch("groupType");
+
+  useEffect(() => {
+    setValue("memberCount", 2);
+  });
 
   // 전송 완료 후 모달
   const handleConfirm = () => {
@@ -123,16 +130,36 @@ function GroupRecruit() {
       createdAt: new Date(),
       updatedAt: new Date(),
       group_type: formData.groupType,
-      group_region: groupType === "오프라인" ? formData.region : "",
+      group_region:
+        groupType === "오프라인" || groupType === "전체"
+          ? [formData.region]
+          : "",
       member_count: formData.memberCount as number,
       description: formData.description,
       imgUrl: formData.downloadURL,
-      tag: formData.hashtag ? formData.hashtag.split(",") : [],
+      tag: formData.tag ? formData.tag.split(",") : [],
       members: [],
+      applicants: [],
     };
 
     try {
-      await addDoc(collection(db, firebaseStore), groupData);
+      const { id } = await addDoc(collection(db, firebaseStore), groupData);
+
+      // 가져온 docId로 collection comments에 문서 추가
+      const commentCollectionRef = collection(db, "comments");
+      await addDoc(commentCollectionRef, {
+        docId: id,
+        uid: currentUser,
+        comments: [],
+      });
+
+      // 가져온 docId로 collection likes에 문서 추가
+      const likeCollectionRef = collection(db, "likes");
+      await addDoc(likeCollectionRef, {
+        docId: id,
+        uid: currentUser,
+        docList: [id],
+      });
     } catch (error) {
       console.error(error);
     }
@@ -175,7 +202,6 @@ function GroupRecruit() {
   //   const subscription = watch((value, { name, type }) =>
   //     console.log(value, name, type)
   //   );
-
   //   return () => subscription.unsubscribe();
   // }, [watch]);
 
@@ -185,7 +211,7 @@ function GroupRecruit() {
 
   return (
     <MainTemplate pageName="studyGroupRecruit">
-      <SectionTemplate sectionName="스터디 모집글" border={true}>
+      <SectionTemplate sectionName={"스터디 모집글"} border={true}>
         {/* 폼 제출 로딩 */}
         {isLoading && <Loader bgColor="white" />}
 
@@ -262,15 +288,15 @@ function GroupRecruit() {
             })}
           ></Textarea>
 
-          {/* 최대 모집 인원  */}
+          {/* 태그  */}
           <Input
             type="text"
             label="태그"
             inputDescription="❗태그와 태그는 콤마(,) 로 구분해주세요"
-            placeholder="해시태그, 해시태그, 해시태그"
+            placeholder="태그, 태그, 태그"
             width="488px"
             errors={errors}
-            {...register("hashtag", {
+            {...register("tag", {
               pattern: {
                 value: /^[가-힣a-zA-Z\s,]+$/,
                 message: "콤마(,)를 제외한 특수문자는 들어갈 수 없습니다",

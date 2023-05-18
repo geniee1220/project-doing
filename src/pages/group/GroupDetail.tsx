@@ -17,9 +17,15 @@ import {
 import { useNavigate, useParams } from "react-router";
 
 // apis
-import { GroupModel, useGroups } from "../../apis/groups/index.tsx";
+import {
+  ApplicantModel,
+  GroupModel,
+  useGroups,
+} from "../../apis/groups/index.tsx";
 import { AuthContext } from "../../apis/user/index.tsx";
 
+import { useRecoilValue } from "recoil";
+import { userState } from "../../atoms/userState.tsx";
 // components
 import { IoArrowBack } from "react-icons/io5";
 import MainTemplate from "../../components/templates/MainTemplate.tsx/index.tsx";
@@ -36,9 +42,18 @@ function GroupDetail() {
   const { id: docId } = useParams();
   const { data: group, isLoading } = useGroups();
   const { currentUser } = useContext(AuthContext);
+  const userData = useRecoilValue(userState);
   const { isCommentLoading } = useComments();
   const navigate = useNavigate();
   const [currentData, setCurrentData] = useState<GroupModel>();
+
+  // firebase
+  const groupCollectionRef = collection(db, "groups");
+  const commentCollectionRef = collection(db, "comments");
+
+  // 그룹 지원
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [isApply, setIsApply] = useState(false);
 
   // 글 삭제 모달
   const [isDeleteGroupModalOpen, setIsDeleteGroupModalOpen] = useState(false);
@@ -57,46 +72,38 @@ function GroupDetail() {
     setCurrentData(currentPageData[0]);
   }, [group, docId]);
 
-  // 상세 페이지 로딩 시 comment 컬렉션에 groups에 매칭하는 데이터 생성
+  // 지원자에 현재 유저가 있는지 확인
   useEffect(() => {
-    const getComments = async () => {
-      try {
-        const commentCollectionRef = collection(db, "comments");
-        const documentQuery = query(
-          commentCollectionRef,
-          where("docId", "==", docId)
-        );
-        const docSnap = await getDocs(documentQuery);
+    if (!currentUser) return;
 
-        const commentData = {
-          docId: docId,
-          uid: currentUser,
-          comments: [],
-        };
+    const applicants: ApplicantModel[] = currentData?.applicants ?? [];
+    const isCurrentUser = applicants.some(
+      (applicant) => applicant.uid === currentUser
+    );
 
-        if (docSnap.empty) {
-          await addDoc(commentCollectionRef, commentData);
-          return;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getComments();
-  }, []);
+    console.log("isCurrentUser: ", isCurrentUser);
 
-  // (글)그룹 삭제 로직
-  const deleteGroup = async () => {
-    const groupCollectionRef = collection(db, "groups");
-    await deleteDoc(doc(groupCollectionRef, docId));
+    if (isCurrentUser) {
+      setIsApply(true);
+    }
+  }, [group, currentUser, currentData]);
 
-    // 댓글 삭제
-    const commentCollectionRef = collection(db, "comments");
+  const getDocData = async () => {
     const documentQuery = query(
       commentCollectionRef,
       where("docId", "==", docId)
     );
     const docSnap = await getDocs(documentQuery);
+
+    return docSnap;
+  };
+
+  // (글)그룹 삭제 로직
+  const deleteGroup = async () => {
+    await deleteDoc(doc(groupCollectionRef, docId));
+
+    // 댓글 삭제
+    const docSnap = await getDocData();
     const commentDoc = docSnap.docs[0];
     deleteDoc(doc(commentCollectionRef, commentDoc.id));
 
@@ -113,6 +120,49 @@ function GroupDetail() {
   const handleModalDeleteConfirm = () => {
     setDeleteCommentItem(selectedCommentId);
     setIsCommentModalOpen(false);
+  };
+
+  // 그룹 지원 로직
+  const handleApplyGroupModal = async () => {
+    if (!currentUser) {
+      return navigate("/login");
+    }
+    setIsApplyModalOpen(true);
+  };
+
+  // 그룹 지원 취소
+  const handleCancelGroup = async () => {
+    const filteredArr = (currentData?.applicants || []).filter(
+      (item) => item.uid !== currentUser
+    );
+
+    await updateDoc(doc(groupCollectionRef, docId), {
+      applicants: filteredArr,
+    });
+
+    setIsApplyModalOpen(false);
+    setIsApply(false);
+  };
+
+  const handleApplyGroup = async () => {
+    const applicantData = {
+      uid: currentUser,
+      nickname: userData.nickname,
+    };
+
+    // 새로운 지원자인 경우에만 추가
+    if (isApply === false) {
+      const uniqueArr = Array.from(
+        new Set([...(currentData?.applicants ?? []), applicantData])
+      );
+
+      await updateDoc(doc(groupCollectionRef, docId), {
+        applicants: uniqueArr,
+      });
+    }
+
+    setIsApplyModalOpen(false);
+    setIsApply(true);
   };
 
   return (
@@ -145,28 +195,79 @@ function GroupDetail() {
                 >
                   삭제
                 </Button>
-                <Button buttonType="default" rounded>
+
+                <StyledLink
+                  type="button"
+                  to={`/studygroup/edit/${docId}`}
+                  style={{ fontSize: "16px" }}
+                >
                   모집글 수정
-                </Button>
+                </StyledLink>
               </div>
             </>
           )
         }
 
-        {
-          // 현재 로그인한 사용자가 모집글 작성자가 아닐 경우, 참여 신청 버튼 표시
-          currentUser !== currentData?.uid &&
-            group !== undefined &&
-            currentUser !== null && <Button>참여 신청</Button>
-        }
+        {currentUser !== currentData?.uid &&
+          group !== undefined &&
+          (isApply ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "0 10px",
+              }}
+            >
+              <Button
+                buttonType="outline"
+                rounded
+                onClick={handleApplyGroupModal}
+              >
+                지원 취소
+              </Button>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "0 10px",
+              }}
+            >
+              <Button
+                buttonType="primary"
+                rounded
+                onClick={handleApplyGroupModal}
+              >
+                참여 신청
+              </Button>
+            </div>
+          ))}
       </SectionTemplate>
 
       {!isCommentLoading && (
         <Comment
-          seletedCommentId={selectedCommentId}
           deleteCommentItem={deleteCommentItem}
           onDeleteClick={handleConfirmModal}
         ></Comment>
+      )}
+
+      {/* 그룹 지원 확인 모달 */}
+      {isApplyModalOpen && (
+        <ConfirmModal
+          title={isApply ? "스터디 그룹 지원 취소" : "스터디 그룹 지원"}
+          message={
+            <>
+              {currentData?.title}
+              <br />
+              {isApply
+                ? "스터디 그룹 지원을 취소하시겠습니까?"
+                : "스터디 그룹에 지원 하시겠습니까?"}
+            </>
+          }
+          onConfirm={isApply ? handleCancelGroup : handleApplyGroup}
+          onCancel={() => setIsApplyModalOpen(false)}
+        ></ConfirmModal>
       )}
 
       {/* 글 삭제 확인 모달 */}
