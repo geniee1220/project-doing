@@ -41,16 +41,11 @@ const {
 } = styledComponent;
 
 interface CommentProps {
-  seletedCommentId: string;
   deleteCommentItem: string;
   onDeleteClick: (commentId: string) => void;
 }
 
-function Comment({
-  seletedCommentId,
-  deleteCommentItem,
-  onDeleteClick,
-}: CommentProps) {
+function Comment({ deleteCommentItem, onDeleteClick }: CommentProps) {
   const param = useParams<{ id: string }>();
   const user = useRecoilValue(userState);
   const { data: data, isCommentLoading } = useComments();
@@ -73,36 +68,33 @@ function Comment({
   }, [deleteCommentItem]);
 
   // 댓글 삭제 로직
-  const deleteComment = useCallback(
-    async (commentId: string) => {
-      const commentCollectionRef = collection(db, "comments");
-      const documentQuery = query(
-        commentCollectionRef,
-        where("docId", "==", param.id)
-      );
-      const docSnap = await getDocs(documentQuery);
-      const commentDoc = docSnap.docs[0];
-      const commentDocRef = doc(db, "comments", commentDoc.id);
+  const deleteComment = async (commentId: string) => {
+    const commentCollectionRef = collection(db, "comments");
+    const documentQuery = query(
+      commentCollectionRef,
+      where("docId", "==", param.id)
+    );
+    const docSnap = await getDocs(documentQuery);
+    const commentDoc = docSnap.docs[0];
+    const commentDocRef = doc(db, "comments", commentDoc.id);
 
-      const filtered = commentsData?.comments.filter(
-        (item) => item.id !== commentId
-      );
+    const filtered = commentsData?.comments.filter(
+      (item) => item.id !== commentId
+    );
 
-      if (filtered) {
-        await updateDoc(commentDocRef, {
-          comments: filtered,
-        });
+    if (filtered) {
+      await updateDoc(commentDocRef, {
+        comments: filtered,
+      });
 
-        console.log("filtered", filtered);
-        console.log("commentID", commentId);
+      console.log("filtered", filtered);
+      console.log("commentID", commentId);
 
-        const updatedDoc = await getDoc(commentDocRef);
-        const updatedData = updatedDoc.data();
-        setCommentsData(() => updatedData as CommentModel | undefined);
-      }
-    },
-    [commentsData, param.id]
-  );
+      const updatedDoc = await getDoc(commentDocRef);
+      const updatedData = updatedDoc.data();
+      setCommentsData(() => updatedData as CommentModel | undefined);
+    }
+  };
 
   // 댓글 작성 로직
   const {
@@ -136,7 +128,6 @@ function Comment({
         where("docId", "==", param.id)
       );
       const docSnap = await getDocs(documentQuery);
-
       const commentDoc = docSnap.docs[0];
       const commentDocRef = doc(db, "comments", commentDoc.id);
 
