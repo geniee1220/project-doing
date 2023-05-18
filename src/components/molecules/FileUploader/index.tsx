@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 
 // Components
 import { RiDragDropLine } from "react-icons/ri";
@@ -12,6 +12,7 @@ const {
   FileDropZone,
 } = styledComponent;
 import ErrorMessage from "../../atoms/Message/ErrorMessage";
+import { SkeletonImage } from "../../atoms/SkeletonImage";
 
 export interface FileUploaderCSSProps {
   className?: string;
@@ -19,13 +20,23 @@ export interface FileUploaderCSSProps {
 
 interface FileUploaderProps extends FileUploaderCSSProps {
   onFileSelected: (file: File) => void;
+  storedImgUrl?: string;
 }
 
-function FileUploader({ onFileSelected, className }: FileUploaderProps) {
+function FileUploader({
+  onFileSelected,
+  className,
+  storedImgUrl,
+}: FileUploaderProps) {
+  const [isLoading, setIsLoading] = useState(true);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>();
   const [error, setError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showImage, setShowImage] = useState(true);
+
+  const handleImageLoad = () => {
+    setIsLoading(false);
+  };
 
   const handleFileUpload = (
     event:
@@ -103,15 +114,23 @@ function FileUploader({ onFileSelected, className }: FileUploaderProps) {
         onDragLeave={handleDragLeave}
         className={isHovered ? "hover" : ""}
       >
-        {showImage && thumbnailUrl ? (
-          <img src={thumbnailUrl} alt="스터디 그룹 커버 이미지" />
-        ) : (
+        {!thumbnailUrl && !storedImgUrl ? (
           <>
             <RiDragDropLine className="dragIcon" />
             <p>
               스터디 그룹 커버 이미지를 올려주세요 <br />
               권장 이미지 사이즈: 700 x 160
             </p>
+          </>
+        ) : (
+          <>
+            {isLoading && <SkeletonImage />}
+            <img
+              src={thumbnailUrl || storedImgUrl}
+              alt="스터디 그룹 커버 이미지"
+              onLoad={handleImageLoad}
+              style={{ display: isLoading ? "none" : "block" }}
+            />
           </>
         )}
       </FileDropZone>
@@ -127,7 +146,7 @@ function FileUploader({ onFileSelected, className }: FileUploaderProps) {
           이미지 선택
         </FileUploaderLabel>
 
-        {thumbnailUrl && (
+        {(thumbnailUrl || storedImgUrl) && (
           <FileDeleteButton
             className="deleteButton"
             onClick={handleDeleteImage}
