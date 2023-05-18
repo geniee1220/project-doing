@@ -26,6 +26,7 @@ const MainInner = styled.main<MainTemplateCSSProps>`
       case "login":
         return `padding-top: 140px;`;
       case "studyGroup":
+      case "myLounge":
         return `padding-top: 48px;`;
       default:
         return `padding-top: 32px;`;
@@ -42,6 +43,8 @@ const MainContents = styled.div<MainTemplateCSSProps>`
 const SectionContainer = styled.section<SectionTemplateCSSProps>`
   position: relative;
   width: 100%;
+  max-width: ${(props) => props.contentsWidth || "100%"};
+  margin: 0 auto;
   ${({ border }) =>
     border &&
     css`
@@ -58,15 +61,33 @@ const TitleDecoration = styled.div`
   margin-bottom: 12px;
 `;
 
+const SectionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 26px;
+  padding-bottom: 2px;
+  border-bottom: 2px solid #000;
+`;
+
 const SectionLabel = styled.p`
   position: relative;
-  margin-bottom: 36px;
+  margin-bottom: 16px;
   font-size: 21px;
   font-weight: 500;
 `;
 
 const SectionInner = styled.div`
   width: 100%;
+  min-height: 300px;
+`;
+
+const LoadButton = styled.button`
+  width: 100%px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
 `;
 
 const styledComponent = {
@@ -75,9 +96,11 @@ const styledComponent = {
   MainInner,
   MainContents,
   SectionContainer,
+  SectionHeader,
   TitleDecoration,
   SectionLabel,
   SectionInner,
+  LoadButton,
 };
 
 export default styledComponent;
