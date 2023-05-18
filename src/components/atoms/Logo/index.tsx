@@ -6,8 +6,8 @@ const { LogoLink } = styledComponent;
 
 function Logo() {
   return (
-    <h1 aria-label="doing 로고">
-      <LogoLink to="/">
+    <h1>
+      <LogoLink to="/" aria-label="doing 로고">
         <img src={LogoImg} aria-hidden="true"></img>
       </LogoLink>
     </h1>
