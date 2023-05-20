@@ -16,7 +16,6 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 import styledComponent from "./GroupLike.style";
 import { useNavigate } from "react-router";
-import { get, set } from "firebase/database";
 const { GroupLikeButton } = styledComponent;
 
 interface GroupLikeProps {
@@ -73,9 +72,6 @@ function GroupLike({ docId }: GroupLikeProps) {
         where("uid", "==", currentUser)
       );
       const currentUserSnapshot = await getDocs(currentUserQuery);
-
-      console.log("currentUserSnapshot", currentUserSnapshot);
-      console.log("currentUserSnapshot.docs", currentUserSnapshot.docs);
 
       // likes 컬렉션에 현재 로그인한 유저의 uid로 문서를 검색
       // 문서가 없으면 새로운 문서를 생성
