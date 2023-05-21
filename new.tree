@@ -1,4 +1,3 @@
-├── .DS_Store
 ├── .eslintrc.cjs
 ├── .gitignore
 ├── .treerc
@@ -7,16 +6,9 @@
 ├── package-lock.json
 ├── package.json
 ├── public
-│  ├── .DS_Store
-│  ├── banner
-│  │  ├── .DS_Store
-│  │  ├── main_banner1.png
-│  │  ├── main_banner2.png
-│  │  └── main_banner3.png
 │  └── logo.svg
 ├── README.md
 ├── src
-│  ├── .DS_Store
 │  ├── apis
 │  │  ├── comments
 │  │  │  └── index.tsx
