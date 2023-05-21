@@ -8,13 +8,7 @@ import { storage, db } from "../../../firebase.tsx";
 
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 
-import {
-  
-  ref,
-
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 // react-hook-form
 import { useForm } from "react-hook-form";
