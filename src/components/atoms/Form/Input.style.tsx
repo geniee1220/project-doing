@@ -18,6 +18,7 @@ const InputLabel = styled.label<InputCSSProps>`
 const commonInputStyle = css<InputCSSProps>`
   width: 100%;
   border: 0;
+  font: inherit;
 
   ${(props) =>
     props.focusStyle &&
@@ -84,6 +85,7 @@ const StyledInputCheckbox = styled.input`
     height: 40px;
     background-color: #f8f8f9;
     border-radius: 4px;
+    cursor: pointer;
   }
 
   &:checked + label {

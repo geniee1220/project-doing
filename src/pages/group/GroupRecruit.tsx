@@ -4,19 +4,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { useMutation } from "react-query";
 
 // firebase
-import { auth, storage, db } from "../../../firebase.tsx";
+import { storage, db } from "../../../firebase.tsx";
 
-import {
-  collection,
-  doc,
-  getDoc,
-  addDoc,
-  setDoc,
-  getDocs,
-  query,
-  where,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 
 import {
   getStorage,
@@ -92,6 +82,7 @@ function GroupRecruit() {
     handleSubmit,
     formState: { errors },
     setValue,
+    setError,
     watch,
   } = useForm({ mode: "onBlur" });
 
@@ -185,6 +176,14 @@ function GroupRecruit() {
       return;
     }
 
+    if (formData.region && formData.region.length > 3) {
+      setError("region", {
+        type: "validate",
+        message: "지역은 최대 3개까지 선택 가능합니다.",
+      });
+      return false;
+    }
+
     setLoading(true);
 
     try {
@@ -210,12 +209,12 @@ function GroupRecruit() {
   }, [isLoading]);
 
   // 디버깅 코드(콘솔)
-  // useEffect(() => {
-  //   const subscription = watch((value, { name, type }) =>
-  //     console.log(value, name, type)
-  //   );
-  //   return () => subscription.unsubscribe();
-  // }, [watch]);
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) =>
+      console.log(value, name, type)
+    );
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   // useEffect(() => {
   //   console.log("file", file);
