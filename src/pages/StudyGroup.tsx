@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 
 // react router
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 // firebase post
 import { useGroups } from "../apis/groups/index.tsx";
@@ -22,6 +22,7 @@ const { GroupContainer, GroupCardContainer } = styledComponent;
 
 function StudyGroup() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { data: groups, isLoading } = useGroups();
   const [currentPage, setCurrentPage] = useState(0);
   const [filteredPosts, setFilteredPosts] = useState<GroupModel[] | null>(null);
@@ -29,6 +30,23 @@ function StudyGroup() {
   useEffect(() => {
     console.log("filteredPosts", filteredPosts);
   }, [filteredPosts]);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const searchQuery = searchParams.get("tag");
+
+    if (searchQuery !== null) {
+      const filtered = groups?.filter((group) =>
+        group.tag.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      ) as GroupModel[];
+
+      setFilteredPosts(filtered);
+    } else {
+      setFilteredPosts(groups as GroupModel[]);
+    }
+  }, [location.search, groups]);
 
   // 페이지네이션
   const NUM_POSTS_PER_PAGE = 5;
@@ -50,12 +68,6 @@ function StudyGroup() {
   const handlePageClick = (data: { selected: number }) => {
     setCurrentPage(data.selected);
   };
-
-  useEffect(() => {
-    if (groups) {
-      setFilteredPosts(groups);
-    }
-  }, [groups]);
 
   return (
     <MainTemplate pageName="studyGroup" contentsWidth="920px">

@@ -10,6 +10,7 @@ import { VscChromeClose } from "react-icons/vsc";
 // styled-components
 import styledComponent from "./SearchBar.style";
 import Filter from "../../atoms/FIlter";
+import { useLocation } from "react-router";
 
 const {
   SearchBarContainer,
@@ -27,7 +28,7 @@ interface SearchBarProps {
   setFilteredPosts: any;
 }
 
-const categories = ["모든 그룹", "활성화 그룹"];
+const categories = ["모든 그룹", "활성화 그룹", "태그"];
 
 function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,7 +38,17 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
 
   const MAX_SEARCH_HISTORY = 5;
 
+  const location = useLocation();
+
   useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const searchQuery = searchParams.get("tag");
+
+    if (searchQuery !== null) {
+      setSearchQuery(searchQuery);
+      setSelectedCategory("태그");
+    }
+
     handleSearch();
   }, [selectedCategory]);
 
@@ -60,6 +71,8 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
     const filterByCategory = (group: GroupModel) => {
       if (selectedCategory === "활성화 그룹") {
         return Number(group.member_count) !== Number(group.members.length) + 1;
+      } else if (selectedCategory === "태그") {
+        return group.tag.some((tag) => tag.includes(searchTerm));
       }
       return true;
     };
@@ -67,12 +80,21 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
     if (searchTerm.trim() === "") {
       filtered = groups?.filter(filterByCategory);
     } else {
-      filtered = groups?.filter(
-        (group) =>
-          group.title.toLowerCase().includes(searchTerm) &&
-          filterByCategory(group)
-      );
+      if (selectedCategory === "태그") {
+        // groups의 tag 배열에서 searchTerm을 포함하는 태그가 있는지 확인
+        filtered = groups?.filter((group) =>
+          group.tag.some((tag) => tag.toLowerCase().includes(searchTerm))
+        );
+        console.log(filtered);
+      } else {
+        filtered = groups?.filter(
+          (group) =>
+            group.title.toLowerCase().includes(searchTerm) &&
+            filterByCategory(group)
+        );
+      }
     }
+
     setFilteredPosts(filtered);
 
     //  검색 기록에 추가
