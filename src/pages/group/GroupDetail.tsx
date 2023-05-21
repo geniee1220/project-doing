@@ -1,11 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { db } from "../../../firebase.tsx";
 import {
   collection,
   doc,
-  getDoc,
-  addDoc,
   getDocs,
   query,
   where,
@@ -37,11 +35,10 @@ import Button from "../../components/atoms/Button/index.tsx";
 import Comment from "../../components/organisms/Comment/index.tsx";
 import { useComments } from "../../apis/comments/index.tsx";
 import ConfirmModal from "../../components/organisms/Modal/Confirm/index.tsx";
-import { set } from "firebase/database";
 
 function GroupDetail() {
   const { id: docId } = useParams();
-  const { data: group, isLoading } = useGroups();
+  const { data: group } = useGroups();
   const { currentUser } = useContext(AuthContext);
   const userData = useRecoilValue(userState);
   const { isCommentLoading } = useComments();
