@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 
 // react-query
 import { useMutation } from "react-query";
@@ -9,9 +9,9 @@ import { storage, db } from "../../../firebase.tsx";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 
 import {
-  getStorage,
+  
   ref,
-  uploadBytes,
+
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";

@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import MainTemplate from "../components/templates/MainTemplate.tsx";
 import CarouselSlide from "../components/organisms/Carousel/index.tsx";
 import SectionTemplate from "../components/templates/SectionTemplate.tsx/index.tsx";
 
 import styledComponent from "../components/templates/Template.style";
-import { Link } from "react-router-dom";
+
 import StyledLink from "../components/atoms/StyledLink/StyledLink.style.tsx";
 import { GroupModel, useGroups } from "../apis/groups/index.tsx";
 import Card from "../components/organisms/Group/GroupCard/index.tsx";
 import Loader from "../components/atoms/Loader/index.tsx";
-import { SkeletonImage } from "../components/atoms/SkeletonImage/index.tsx";
+
 const { SectionHeader, SectionLabel } = styledComponent;
 
 // 캐러셀 옵션 및 아이템

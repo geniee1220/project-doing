@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "react-query";
@@ -21,13 +21,7 @@ import { GroupModel, useGroups } from "../../apis/groups/index.tsx";
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { IoArrowBack } from "react-icons/io5";
 
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage, db } from "../../../firebase.tsx";
 
 const radioOptions = [

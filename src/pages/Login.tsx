@@ -1,9 +1,9 @@
-import React, { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 
 // recoil
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
-import { userState, isAuthenticatedState } from "../atoms/userState";
+import { isAuthenticatedState } from "../atoms/userState";
 
 // react-query
 import { useMutation } from "react-query";
@@ -49,7 +49,6 @@ function Login() {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
   } = useForm<UserProps>({ mode: "onBlur" });
 
   const loginUser = async (user: UserProps) => {
@@ -66,10 +65,6 @@ function Login() {
         auth,
         user.email,
         user.password
-      );
-
-      const userDoc = await getDoc(
-        doc(db, firebaseStore, firebaseUser.user?.uid)
       );
 
       setIsRegistered(true);
