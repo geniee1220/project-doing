@@ -1,8 +1,6 @@
 # project-doing
 
-<section >
-
-<div aria-label="Tech Stack" style="text-align:center;">
+<center>
 
 ![banner](https://github.com/geniee1220/project-doing/assets/110911811/2632f1f9-6940-4aea-9153-1fb413e60d50)
 
@@ -18,7 +16,7 @@
 ![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
 ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
 
-</div>
+</center>
 
 <i>함께 공부할 사람들이 필요한데... 스터디 그룹 어디서 구하지? </i> <br/><br/>
 아직도 이런 고민 하고 계신가요? 스터디 그룹 찾기 위해 플랫폼 여기 저기 돌아다닐 필요 없어요. <br/>
@@ -26,8 +24,6 @@
 <strong>달리고 싶은 당신을 위한 스터디 플랫폼, doing</strong>
 
 [배포 페이지 바로가기](https://project-doing-65kn.vercel.app/)
-
-</section>
 
 </br>
 
@@ -83,40 +79,40 @@ https://xd.adobe.com/view/cb1bbc93-c94f-4062-946c-d2a837afc36f-9e48/
 
 ## 주요 서비스 화면 데모 보기
 
-<div style="text-align:center;" >
+<center>
 
-<a href="https://youtu.be/HnMbRnldo6I"><img style="width:100%; max-width: 500px; " src=https://markdown-videos.deta.dev/youtube/HnMbRnldo6I></a></img>
+<a href="https://youtu.be/HnMbRnldo6I"><img style="width:100%; max-width: 400px; " src=https://markdown-videos.deta.dev/youtube/HnMbRnldo6I></a></img>
 
-</div>
+</center>
 
 ### 1. 메인 페이지
 
-<div style="text-align:center">
+<center>
 
 ![main_page](https://github.com/geniee1220/project-doing/assets/110911811/5e3a0648-6e92-4497-b6ab-2c14f663a531)
 
-</div>
+</center>
 
 ### 2. 스터디 그룹 페이지
 
-<div style="text-align:center">
+<center>
 
 ![study_group](https://github.com/geniee1220/project-doing/assets/110911811/0a5e9740-b5a3-4a7d-bd30-481bec3f224b)
 
-</div>
+</center>
 
 <br/>
 
-<div style="text-align:center">
+<center>
 
 ![222](https://github.com/geniee1220/project-doing/assets/110911811/9772f6fd-b819-4fff-b1f7-7d227b739d0c)
 
-</div>
+</center>
 
 ### 3. 마이 라운지 페이지
 
-<div style="text-align:center">
+<center>
 
 ![my_lounge](https://github.com/geniee1220/project-doing/assets/110911811/48f3355e-a2ea-43cd-8fb5-28eaa55fed62)
 
-</div>
+</center>
