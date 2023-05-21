@@ -26,10 +26,15 @@ function StudyGroup() {
   const [currentPage, setCurrentPage] = useState(0);
   const [filteredPosts, setFilteredPosts] = useState<GroupModel[] | null>(null);
 
-  // 페이지네이션
+  useEffect(() => {
+    console.log("filteredPosts", filteredPosts);
+  }, [filteredPosts]);
 
+  // 페이지네이션
   const NUM_POSTS_PER_PAGE = 5;
-  const pageCount = groups ? Math.ceil(groups.length / NUM_POSTS_PER_PAGE) : 0;
+  const pageCount = filteredPosts
+    ? Math.ceil(filteredPosts.length / NUM_POSTS_PER_PAGE)
+    : 0;
   const startIndex = currentPage * NUM_POSTS_PER_PAGE;
 
   // 모집글 작성 버튼 클릭 시, 로그인 여부에 따라 다른 페이지로 이동
