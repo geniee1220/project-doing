@@ -107,6 +107,24 @@ function GroupDetail() {
     const commentDoc = docSnap.docs[0];
     deleteDoc(doc(commentCollectionRef, commentDoc.id));
 
+    // 좋아요 삭제 likes 컬렉션에서 해당 docId 삭제
+    const likesCollectionRef = collection(db, "likes");
+    const currentUserQuery = query(
+      likesCollectionRef,
+      where("uid", "==", currentUser)
+    );
+    const currentUserSnapshot = await getDocs(currentUserQuery);
+    const likesData = currentUserSnapshot.docs[0].data();
+    const docData = likesData.docList;
+
+    if (docData.includes(docId)) {
+      const filtered = docData.filter((item: string) => item !== docId);
+
+      await updateDoc(currentUserSnapshot.docs[0].ref, {
+        docList: filtered,
+      });
+    }
+
     setIsDeleteGroupModalOpen(false);
     navigate(-1);
   };
