@@ -127,7 +127,7 @@ function GroupEdit() {
       group_type: formData.groupType,
       group_region:
         groupType === "오프라인" || groupType === "전체"
-          ? [formData.region]
+          ? [...formData.region]
           : "",
       member_count: formData.memberCount,
       description: formData.description,

@@ -133,7 +133,7 @@ function GroupRecruit() {
       group_type: formData.groupType,
       group_region:
         groupType === "오프라인" || groupType === "전체"
-          ? [formData.region]
+          ? [...formData.region]
           : "",
       member_count: formData.memberCount as number,
       description: formData.description,
