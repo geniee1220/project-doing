@@ -27,9 +27,11 @@ import { userState } from "../atoms/userState.tsx";
 import Card from "../components/organisms/Group/GroupCard/index.tsx";
 import Loader from "../components/atoms/Loader/index.tsx";
 import GroupApproval from "../components/organisms/Group/GroupApproval/index.tsx";
+import { useNavigate } from "react-router";
 
 function MyLounge() {
   const userData = useRecoilValue(userState);
+  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const { data: groups, isLoading } = useGroups();
 
@@ -60,7 +62,9 @@ function MyLounge() {
   const usersCollectionRef = collection(db, "users");
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      return navigate("/login");
+    }
     getOwnGroups();
     getJoinedGroups();
     getLikedGroups();
