@@ -37,6 +37,7 @@ import Button from "../../components/atoms/Button/index.tsx";
 import Comment from "../../components/organisms/Comment/index.tsx";
 import { useComments } from "../../apis/comments/index.tsx";
 import ConfirmModal from "../../components/organisms/Modal/Confirm/index.tsx";
+import { set } from "firebase/database";
 
 function GroupDetail() {
   const { id: docId } = useParams();
@@ -54,6 +55,7 @@ function GroupDetail() {
   // 그룹 지원
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [isApply, setIsApply] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   // 글 삭제 모달
   const [isDeleteGroupModalOpen, setIsDeleteGroupModalOpen] = useState(false);
@@ -77,14 +79,19 @@ function GroupDetail() {
     if (!currentUser) return;
 
     const applicants: ApplicantModel[] = currentData?.applicants ?? [];
-    const isCurrentUser = applicants.some(
+    const isApplyStatus = applicants.some(
       (applicant) => applicant.uid === currentUser
     );
 
-    console.log("isCurrentUser: ", isCurrentUser);
+    // currentData의 members 배열에 현재 유저가 있는지 확인
+    const isRegisteredStatus = currentData?.members.includes(currentUser);
 
-    if (isCurrentUser) {
+    if (isApplyStatus) {
       setIsApply(true);
+    }
+
+    if (isRegisteredStatus) {
+      setIsRegistered(true);
     }
   }, [group, currentUser, currentData]);
 
@@ -150,16 +157,31 @@ function GroupDetail() {
 
   // 그룹 지원 취소
   const handleCancelGroup = async () => {
-    const filteredArr = (currentData?.applicants || []).filter(
-      (item) => item.uid !== currentUser
-    );
+    if (isApply) {
+      const applyFilteredArr = (currentData?.applicants || []).filter(
+        (item) => item.uid !== currentUser
+      );
+      await updateDoc(doc(groupCollectionRef, docId), {
+        applicants: applyFilteredArr,
+      });
 
-    await updateDoc(doc(groupCollectionRef, docId), {
-      applicants: filteredArr,
-    });
+      setIsApply(false);
+    }
+
+    if (isRegistered) {
+      const filteredArr = (currentData?.members || []).filter(
+        (item) => item !== currentUser
+      );
+
+      await updateDoc(doc(groupCollectionRef, docId), {
+        members: filteredArr,
+      });
+
+      setIsRegistered(false);
+      setIsApply(false);
+    }
 
     setIsApplyModalOpen(false);
-    setIsApply(false);
   };
 
   const handleApplyGroup = async () => {
@@ -169,7 +191,7 @@ function GroupDetail() {
     };
 
     // 새로운 지원자인 경우에만 추가
-    if (isApply === false) {
+    if (isApply === false && isRegistered === false) {
       const uniqueArr = Array.from(
         new Set([...(currentData?.applicants ?? []), applicantData])
       );
@@ -177,10 +199,11 @@ function GroupDetail() {
       await updateDoc(doc(groupCollectionRef, docId), {
         applicants: uniqueArr,
       });
+
+      setIsApply(true);
     }
 
     setIsApplyModalOpen(false);
-    setIsApply(true);
   };
 
   return (
@@ -227,8 +250,8 @@ function GroupDetail() {
         }
 
         {currentUser !== currentData?.uid &&
-          group !== undefined &&
-          (isApply ? (
+          currentData !== undefined &&
+          (isApply || isRegistered ? (
             <div
               style={{
                 display: "flex",
@@ -241,7 +264,7 @@ function GroupDetail() {
                 rounded
                 onClick={handleApplyGroupModal}
               >
-                지원 취소
+                {isApply ? "지원 취소" : isRegistered ? "스터디 그룹 탈퇴" : ""}
               </Button>
             </div>
           ) : (
@@ -273,7 +296,11 @@ function GroupDetail() {
       {/* 그룹 지원 확인 모달 */}
       {isApplyModalOpen && (
         <ConfirmModal
-          title={isApply ? "스터디 그룹 지원 취소" : "스터디 그룹 지원"}
+          title={
+            isApply || isRegistered
+              ? "스터디 그룹 지원 취소"
+              : "스터디 그룹 지원"
+          }
           message={
             <>
               {currentData?.title}
@@ -283,7 +310,9 @@ function GroupDetail() {
                 : "스터디 그룹에 지원 하시겠습니까?"}
             </>
           }
-          onConfirm={isApply ? handleCancelGroup : handleApplyGroup}
+          onConfirm={
+            isApply || isRegistered ? handleCancelGroup : handleApplyGroup
+          }
           onCancel={() => setIsApplyModalOpen(false)}
         ></ConfirmModal>
       )}

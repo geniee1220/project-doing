@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, use } from "react";
 
 // icons
 import { IoArrowForward } from "react-icons/io5";
@@ -9,6 +9,7 @@ import { GroupModel } from "../../../../apis/groups";
 import { SkeletonImage } from "../../../atoms/SkeletonImage";
 import { Link, useLocation } from "react-router-dom";
 import GroupLike from "../GroupLike";
+import { AuthContext } from "../../../../apis/user";
 
 const {
   CardContainer,
@@ -32,7 +33,23 @@ function Card({ data, children }: CardProps) {
   const [isLoading, setIsLoading] = useState(true);
   const path = `/studygroup/${data.id}`;
   const location = useLocation();
+  const { currentUser } = useContext(AuthContext);
+  const [isMember, setIsMember] = useState(false);
 
+  const isMembersFull =
+    data.members !== undefined && data.members.length + 1 === data.member_count;
+
+  useEffect(() => {
+    // 글 작성자도, 그룹 멤버도 아닐 때는 ClosedLayer 노출
+    if (
+      currentUser &&
+      (currentUser == data.uid || data.members?.includes(currentUser))
+    ) {
+      setIsMember(true);
+    }
+  }, [currentUser]);
+
+  // 타이틀 분기처리
   const titleContent =
     data.group_type === "오프라인" ? (
       <>
@@ -57,7 +74,7 @@ function Card({ data, children }: CardProps) {
   return (
     <>
       <CardContainer
-        className={data.members.length + 1 == data.member_count ? "closed" : ""}
+        className={isMembersFull ? (isMember ? "member-closed" : "closed") : ""}
       >
         {/* 스켈레톤 이미지 - 로딩 후 이미지가 깜박거리는 것 방지  */}
         {data.imgUrl !== "" && isLoading && <SkeletonImage />}
@@ -87,7 +104,8 @@ function Card({ data, children }: CardProps) {
           {/* 모집 현황 */}
           <CardRecruitmentStatus>
             <span style={{ marginRight: "30px" }}>모집현황</span>
-            {data.members.length + 1}명&nbsp;/&nbsp;{data.member_count}명
+            {data.members.length + 1}
+            명&nbsp;/&nbsp;{data.member_count}명
           </CardRecruitmentStatus>
 
           {/* 내용 */}
@@ -110,7 +128,7 @@ function Card({ data, children }: CardProps) {
         )}
 
         {/* 모집 마감 레이어*/}
-        {data.members.length + 1 == data.member_count && <ClosedLayer />}
+        {isMembersFull && !isMember && <ClosedLayer />}
       </CardContainer>
     </>
   );
