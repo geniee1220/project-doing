@@ -83,7 +83,7 @@ const TagContainer = styled.div`
   margin-top: 8px;
 `;
 
-const Tag = styled.span`
+const Tag = styled(Link)`
   display: inline-flex;
   align-items: center;
   justify-content: center;

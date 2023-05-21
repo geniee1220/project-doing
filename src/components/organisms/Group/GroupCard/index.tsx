@@ -114,7 +114,9 @@ function Card({ data, children }: CardProps) {
           {/* 태그 */}
           <TagContainer>
             {data.tag.map((tag: string, index: number) => (
-              <Tag key={index}>{tag}</Tag>
+              <Tag to={`/studygroup?tag=${tag}`} key={index}>
+                {tag}
+              </Tag>
             ))}
           </TagContainer>
         </CardInner>
