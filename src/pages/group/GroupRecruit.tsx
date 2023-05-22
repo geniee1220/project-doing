@@ -138,25 +138,6 @@ function GroupRecruit() {
         uid: currentUser,
         comments: [],
       });
-
-      // 가져온 docId로 collection likes에 문서 추가
-      const likeCollectionRef = collection(db, "likes");
-
-      // 기존에 유저가 likes 한 목록이 없으면 새로 doc을 추가
-      const currentUserQuery = query(
-        likeCollectionRef,
-        where("uid", "==", currentUser)
-      );
-
-      const currentUserSnapshot = await getDocs(currentUserQuery);
-
-      if (currentUserSnapshot.empty) {
-        await addDoc(likeCollectionRef, {
-          uid: currentUser,
-          docList: [],
-        });
-        return;
-      }
     } catch (error) {
       console.error(error);
     }

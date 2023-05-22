@@ -46,13 +46,16 @@ function Register() {
   } = useForm<UserProps>({ mode: "onBlur" });
 
   const registerUser = async (user: UserProps) => {
+    // 이메일 중복 체크
     const emailExists = await getDocs(
       query(collection(db, firebaseStore), where("email", "==", user.email))
     );
+
     if (!emailExists.empty) {
       setIsAlreadyRegistered(true);
     }
 
+    // 회원가입
     const firebaseUser = await createUserWithEmailAndPassword(
       auth,
       user.email,
@@ -67,6 +70,13 @@ function Register() {
       selfIntroduction: user.selfIntroduction,
       tag: user.tag ? user.tag.split(",") : [],
     });
+
+    // likes 컬렉션 생성
+    await addDoc(collection(db, "likes"), {
+      uid: firebaseUser.user?.uid,
+      docList: [],
+    });
+
     return firebaseUser;
   };
 
