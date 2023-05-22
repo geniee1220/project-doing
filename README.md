@@ -1,3 +1,16 @@
+- [project-doing](#project-doing)
+  - [프로젝트 소개](#프로젝트-소개)
+    - [개발 기간](#-----)
+    - [개발 내역](#-----)
+    - [주요 개발 스택](#--------)
+  - [프로젝트 상세](#-------)
+    - [프로젝트 구조](#-------)
+  - [주요 서비스 화면 데모 보기](#---------------)
+    - [1. 메인 페이지](#1-------)
+    - [2. 스터디 그룹 페이지](#2-----------)
+    - [3. 마이 라운지 페이지](#3-----------)
+  - [프로젝트 회고](#-------)
+
 # project-doing
 
 <div align="center">
@@ -27,7 +40,7 @@
 
 </br>
 
-## 서비스 소개
+## 프로젝트 소개
 
 ### 개발 기간
 
@@ -77,6 +90,105 @@ https://xd.adobe.com/view/cb1bbc93-c94f-4062-946c-d2a837afc36f-9e48/
 
 <br/>
 
+## 프로젝트 상세
+
+리액트와 타입스크립트로 만든 개인 토이 프로젝트입니다. <br/>
+스터디 그룹 플랫폼을 개발하면서, 더 나은 성능과 개발 생산성을 위해 고민하며 다양한 기술을 적용하였습니다.<br/>
+
+먼저, Adobe XD로 프로토타입과 기능 설명서를 먼저 작성하여 필요한 기능과 DB 설계 이후 개발을 진행하였습니다.<br/>
+사용자 UX를 고려하여 react-loader-spinner 라이브러리를 이용한 로딩 스피너를 사용하고, Skeleton UI를 제작하였습니다.
+
+개발환경에서 빠른 HMR 기능을 사용해 개발 생산성을 높이고, 더 빠른 빌드와 개발이 가능한 Vite를 번들러로 채용해 개발 과정에서 작업 속도를 높일 수 있었습니다.
+
+스타일 코드를 인라인으로 붙이는 것을 최소화하고 코드의 구조를 보다 명확히 파악할 수 있도록 styled-components를 사용하고, style 파일은 별도의 모듈로 분리하였습니다. 반복 사용되는 스타일 코드는 theme.tsx에서 변수로 선언하였습니다.
+
+또한 성능 최적화를 위해 react-query의 캐시 기능을 활용. recoil, useEffect 훅을 함께 사용해 데이터를 fetch하는 커스텀 훅을 만들었습니다. 빌드 시 JS 파일의 크기를 줄이기 위해 다이나믹 임포트를 통해 코드 스플리팅을 하였습니다.
+
+백엔드 서버를 구축하지 않고도 손쉽게 Auth, Database와 Storage기능을 사용할 수 있어 Firebase를 서버 기술로 채택하고,
+사용자가 늘어났을 때를 고려하여 그룹 포스트, 좋아요, 댓글을 별도의 컬렉션으로 분리한 DB 설계를 하였습니다.
+
+### 프로젝트 구조
+
+코드 가독성과 유지 보수성을 높이고, 프로젝트 관리를 보다 체계적으로 수행할 수 있도록 그룹화하여 구성하였습니다.<br/>
+recoil과 react-query에서의 파일은 모듈화하여 별도의 디렉토리에서 관리하였습니다.
+
+```
+├── .eslintrc.cjs
+├── .gitignore
+├── .treerc
+├── firebase.tsx
+├── index.html
+├── package-lock.json
+├── package.json
+├── public
+├── README.md
+├── src
+│  ├── apis
+│  ├── App.tsx
+│  ├── assets
+│  │  ├── logo.svg
+│  │  └── styles
+│  │    ├── custom.d.ts
+│  │    ├── GlobalStyles.tsx
+│  │    ├── style.d.ts
+│  │    └── theme.ts
+│  ├── atoms
+│  ├── components
+│  │  ├── atoms
+│  │  │  ├── Button
+│  │  │  ├── Filter
+│  │  │  ├── Form
+│  │  │  │  ├── Checkbox
+│  │  │  │  ├── Input
+│  │  │  │  ├── Radio
+│  │  │  │  └── Textarea
+│  │  │  ├── Loader
+│  │  │  ├── Logo
+│  │  │  ├── Message
+│  │  │  │  └── ErrorMessage
+│  │  │  ├── SkeletonImage
+│  │  │  └── StyledLink
+│  │  ├── molecules
+│  │  │  ├── FileUploader
+│  │  │  └── SearchBar
+│  │  ├── organisms
+│  │  │  ├── Carousel
+│  │  │  ├── Comment
+│  │  │  ├── Footer
+│  │  │  ├── Group
+│  │  │  │  ├── Group.style.tsx
+│  │  │  │  ├── GroupApproval
+│  │  │  │  ├── GroupCard
+│  │  │  │  ├── GroupLike
+│  │  │  │  └── GroupList
+│  │  │  ├── Header
+│  │  │  ├── Modal
+│  │  │  │  ├── Alert
+│  │  │  │  ├── Confirm
+│  │  │  │  └── Modal.style.tsx
+│  │  │  └── Pagination
+│  │  └── templates
+│  │    ├── MainTemplate.tsx
+│  │    ├── SectionTemplate.tsx
+│  │    └── Template.style.tsx
+│  ├── main.tsx
+│  ├── pages
+│  │  ├── group
+│  │  │  ├── GroupDetail.tsx
+│  │  │  ├── GroupEdit.tsx
+│  │  │  └── GroupRecruit.tsx
+│  │  ├── Home.tsx
+│  │  ├── Login.tsx
+│  │  ├── MyLounge.tsx
+│  │  ├── Register.tsx
+│  │  └── StudyGroup.tsx
+│  └── vite-env.d.ts
+├── tsconfig.json
+├── tsconfig.node.json
+├── vite.config.ts
+└── yarn.lock
+```
+
 ## 주요 서비스 화면 데모 보기
 
 <div align="center">
@@ -116,3 +228,18 @@ https://xd.adobe.com/view/cb1bbc93-c94f-4062-946c-d2a837afc36f-9e48/
 ![my_lounge](https://github.com/geniee1220/project-doing/assets/110911811/48f3355e-a2ea-43cd-8fb5-28eaa55fed62)
 
 </div>
+
+<br/>
+
+## 프로젝트 회고
+
+프로젝트를 기획부터 배포까지 진행하면서 여러 기술적 도전과 문제를 마주하며 고민할 수 있었습니다.<br>
+프로젝트 구조는 어떻게 짜야 할까? DB 테이블을 어떻게 구성해야 할까? 데이터 캐시를 어떻게 사용할 수 있을까?
+
+프로젝트를 진행하며 중복 코드 사용을 최소화하기 위해 함수 모듈화를 진행하고자 하였으나, 시간적 여유 부족으로 완료하지 못한 점이 아쉬웠습니다.
+
+배포 후 Lighthouse로 성능 체크를 해보니 77점이어서 개선점을 찾아 보는 과정에서 빌드 시 메세지 'Some chunks are larger than 500 kBs after minification' 경고 문구를 확인할 수 있었습니다. 청크 분리를 위해 Vite 플러그인 중 하나인 vite-plugin-compression을 적용하였더니, Lighthouse 성능 점수가 기존의 77점에서 84점으로 상승하는 결과를 도출하여 뿌듯했습니다.
+
+그러나 성능 최적화를 위해 이미지 최적화, 다이나믹 임포트 등을 보다 적극적으로 활용하는 등 개선할 부분이 많다는 것을 느꼈습니다.
+
+[▶︎ 프로젝트 트러블 슈팅 기록 바로가기 ](https://puddle-pyroraptor-f10.notion.site/Doing-e5ec57abc75e4af7adabb65450c9409d)
