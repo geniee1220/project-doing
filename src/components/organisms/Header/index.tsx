@@ -21,7 +21,7 @@ function Header() {
   const [isAuthenticated, setIsAuthenticatedState] =
     useRecoilState(isAuthenticatedState);
 
-  const user = useRecoilValue(userState);
+  const [user, setUser] = useRecoilState(userState);
 
   const routeChange = (routePath: string) => {
     navigate(`/${routePath}`);

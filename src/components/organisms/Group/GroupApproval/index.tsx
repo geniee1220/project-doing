@@ -78,7 +78,7 @@ function GroupApproval({
                   {/* 거절 버튼 */}
                   <Button
                     type="button"
-                    onClick={() => onAccept(applicant.uid)}
+                    onClick={() => onReject(applicant.uid)}
                     rounded
                     style={{
                       display: "inline-flex",
