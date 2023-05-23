@@ -102,6 +102,7 @@ function Comment({ deleteCommentItem, onDeleteClick }: CommentProps) {
     handleSubmit,
     formState: { errors },
     setError,
+    setValue,
   } = useForm({ mode: "onBlur" });
 
   const postComment = async (formData: any) => {
@@ -141,6 +142,7 @@ function Comment({ deleteCommentItem, onDeleteClick }: CommentProps) {
       const updatedData = updatedDoc.data();
 
       setCommentsData(() => updatedData as CommentModel | undefined);
+      setValue("comment", "");
     } catch (error) {
       console.error(error);
     }
