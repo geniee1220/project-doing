@@ -17,6 +17,13 @@ const GlobalStyles = createGlobalStyle`
 
   html,
   body {
+    font-family: 'AppleSDGothicNeo', "Apple SD Gothic Neo",'Noto Sans KR', 
+    Arial,  "Malgun Gothic", "맑은 고딕", "Nanum Gothic", Dotum, '돋움', Helvetica, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
     @supports (-webkit-touch-callout: none) {
       height: -webkit-fill-available;
     }
