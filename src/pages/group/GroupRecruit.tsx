@@ -159,6 +159,12 @@ function GroupRecruit() {
       return false;
     }
 
+    // 태그에 입력된 내용이 , 나 공백으로 끝나면 , 제거하고 저장
+    if (formData.tag && formData.tag[formData.tag.length - 1] === ",") {
+      formData.tag = formData.tag.slice(0, -1);
+      setValue("tag", formData.tag);
+    }
+
     setLoading(true);
 
     try {
