@@ -20,6 +20,7 @@ import Input from "../components/atoms/Form/Input/index.tsx";
 import Textarea from "../components/atoms/Form/Textarea/index.tsx";
 import Button from "../components/atoms/Button/index.tsx";
 import ErrorMessage from "../components/atoms/Message/ErrorMessage/index.tsx";
+import StyledLink from "../components/atoms/StyledLink/StyledLink.style.tsx";
 
 interface UserProps {
   nickname: string;
@@ -210,6 +211,16 @@ function Register() {
           {isLoading ? "회원가입 중..." : "회원가입"}
         </Button>
       </form>
+      <div style={{ display: "flex", marginBottom: "100px" }}>
+        <StyledLink
+          to="/login"
+          style={{
+            margin: "10px 0 0 auto",
+          }}
+        >
+          Doing 로그인 &gt;
+        </StyledLink>
+      </div>
     </MainTemplate>
   );
 }
