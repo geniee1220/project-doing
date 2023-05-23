@@ -123,8 +123,9 @@ function MyLounge() {
       return { ...(doc.data() as GroupModel), id: doc.id };
     });
 
-    console.log("applicantGroupSnapshot", applicantGroupSnapshot.docs[0]);
-    console.log("applicantGroupsData", applicantGroupsData);
+    // 디버깅용 코드
+    // console.log("applicantGroupSnapshot", applicantGroupSnapshot.docs[0]);
+    // console.log("applicantGroupsData", applicantGroupsData);
 
     setApplicantGroups(applicantGroupsData);
     setTotalApplicantGroups(applicantGroupSnapshot.size);

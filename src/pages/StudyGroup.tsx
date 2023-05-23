@@ -28,10 +28,6 @@ function StudyGroup() {
   const [filteredPosts, setFilteredPosts] = useState<GroupModel[] | null>(null);
 
   useEffect(() => {
-    console.log("filteredPosts", filteredPosts);
-  }, [filteredPosts]);
-
-  useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const searchQuery = searchParams.get("tag");
 
@@ -68,6 +64,11 @@ function StudyGroup() {
   const handlePageClick = (data: { selected: number }) => {
     setCurrentPage(data.selected);
   };
+
+  // 디버깅용 코드
+  // useEffect(() => {
+  //   console.log("filteredPosts", filteredPosts);
+  // }, [filteredPosts]);
 
   return (
     <MainTemplate pageName="studyGroup" contentsWidth="920px">
