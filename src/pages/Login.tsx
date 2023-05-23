@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 // recoil
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
-import { isAuthenticatedState } from "../atoms/userState";
+import { isAuthenticatedState, userState } from "../atoms/userState";
 
 // react-query
 import { useMutation } from "react-query";
@@ -28,6 +28,7 @@ import Input from "../components/atoms/Form/Input/index.tsx";
 import Button from "../components/atoms/Button/index.tsx";
 import ErrorMessage from "../components/atoms/Message/ErrorMessage/index.tsx";
 import { AuthContext } from "../apis/user/index.tsx";
+import StyledLink from "../components/atoms/StyledLink/StyledLink.style.tsx";
 
 interface UserProps {
   nickname: string;
@@ -44,6 +45,7 @@ function Login() {
 
   const [isAuthenticated, setIsAuthenticatedState] =
     useRecoilState(isAuthenticatedState);
+  const [user, setUser] = useRecoilState(userState);
 
   const {
     register,
@@ -101,10 +103,9 @@ function Login() {
       const modifiedUser = {
         email: userData.email,
         nickname: userData.nickname,
-        selfIntroduction: userData.selfIntroduction,
       };
 
-      localStorage.setItem("user", JSON.stringify(modifiedUser));
+      setUser(modifiedUser);
     },
   });
 
@@ -158,6 +159,16 @@ function Login() {
           </ErrorMessage>
         )}
       </form>
+      <div style={{ display: "flex", marginBottom: "100px" }}>
+        <StyledLink
+          to="/register"
+          style={{
+            margin: "10px 0 0 auto",
+          }}
+        >
+          Doing 회원가입 &gt;
+        </StyledLink>
+      </div>
     </MainTemplate>
   );
 }

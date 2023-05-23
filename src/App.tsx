@@ -17,24 +17,13 @@ import GroupEdit from "./pages/group/GroupEdit";
 import Loader from "./components/atoms/Loader";
 
 function App() {
-  // 유저 정보 불러오기
-  const [user, setUser] = useRecoilState(userState);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
   // 파이어베이스 게시글 & 댓글 불러오기
   useGroups();
   useComments();
 
   return (
     <>
-      <Suspense>
+      <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />} />
 

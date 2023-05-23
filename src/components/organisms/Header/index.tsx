@@ -7,6 +7,7 @@ import { auth } from "../../../../firebase";
 import styledComponent from "./Header.style";
 import Button from "../../atoms/Button";
 import Logo from "../../atoms/Logo";
+
 const {
   HeaderContainer,
   HeaderInner,
@@ -31,6 +32,10 @@ function Header() {
     try {
       await auth.signOut();
       setIsAuthenticatedState(false);
+      setUser({
+        email: "",
+        nickname: "",
+      });
       localStorage.setItem("isAuthenticated", "false");
       navigate("/");
     } catch (error) {
