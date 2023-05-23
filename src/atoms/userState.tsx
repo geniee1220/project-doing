@@ -3,7 +3,6 @@ import { atom } from "recoil";
 export interface UserParams {
   email: string;
   nickname: string;
-  selfIntroduction?: string;
 }
 
 export const userState = atom<UserParams>({
@@ -11,7 +10,6 @@ export const userState = atom<UserParams>({
   default: {
     email: "",
     nickname: "",
-    selfIntroduction: "",
   },
 });
 

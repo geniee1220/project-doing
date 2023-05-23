@@ -11,8 +11,7 @@ const GroupRecruit = React.lazy(() => import("./pages/group/GroupRecruit"));
 const GroupDetail = React.lazy(() => import("./pages/group/GroupDetail"));
 
 import { useComments } from "./apis/comments";
-import { useRecoilState } from "recoil";
-import { userState } from "./atoms/userState";
+
 import GroupEdit from "./pages/group/GroupEdit";
 import Loader from "./components/atoms/Loader";
 

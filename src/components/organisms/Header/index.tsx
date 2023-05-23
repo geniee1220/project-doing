@@ -21,7 +21,6 @@ function Header() {
 
   const [isAuthenticated, setIsAuthenticatedState] =
     useRecoilState(isAuthenticatedState);
-
   const [user, setUser] = useRecoilState(userState);
 
   const routeChange = (routePath: string) => {
@@ -32,11 +31,14 @@ function Header() {
     try {
       await auth.signOut();
       setIsAuthenticatedState(false);
-      setUser({
-        email: "",
-        nickname: "",
-      });
+
       localStorage.setItem("isAuthenticated", "false");
+      localStorage.setItem("user", JSON.stringify({}));
+      setUser({
+        nickname: "",
+        email: "",
+      });
+
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -44,11 +46,14 @@ function Header() {
   };
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
     // 로컬 스토리지의 isAuthenticated 값이 true이면, isAuthenticatedState를 true로 변경
     if (localStorage.getItem("isAuthenticated") === "true") {
       setIsAuthenticatedState(true);
+      setUser(storedUser && JSON.parse(storedUser));
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, setIsAuthenticatedState, setUser]);
 
   return (
     <HeaderContainer>

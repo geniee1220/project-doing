@@ -105,6 +105,7 @@ function Login() {
         nickname: userData.nickname,
       };
 
+      localStorage.setItem("user", JSON.stringify(modifiedUser));
       setUser(modifiedUser);
     },
   });
