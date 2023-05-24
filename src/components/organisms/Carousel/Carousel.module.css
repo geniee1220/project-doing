@@ -1,0 +1,10 @@
+.carousel {
+  min-height: calc(min(100vw * 9 / 16, 260px));
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1210px) {
+  .carousel {
+    min-height: auto;
+  }
+}

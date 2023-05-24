@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { isAuthenticatedState, userState } from "../../../atoms/userState";
 import { auth } from "../../../../firebase";
 
+import { AiOutlineMenu } from "react-icons/ai";
 import styledComponent from "./Header.style";
 import Button from "../../atoms/Button";
 import Logo from "../../atoms/Logo";
@@ -14,6 +15,7 @@ const {
   HeaderRightMenu,
   NavigationList,
   NavigationItem,
+  MobileNavButton,
 } = styledComponent;
 
 function Header() {
@@ -22,6 +24,7 @@ function Header() {
   const [isAuthenticated, setIsAuthenticatedState] =
     useRecoilState(isAuthenticatedState);
   const [user, setUser] = useRecoilState(userState);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   const routeChange = (routePath: string) => {
     navigate(`/${routePath}`);
@@ -62,7 +65,7 @@ function Header() {
         <Logo />
 
         {/* 내비게이션 링크  */}
-        <NavigationList>
+        <NavigationList style={{ display: isMobileNavOpen ? "flex" : "" }}>
           <NavigationItem to="/studygroup">스터디그룹</NavigationItem>
           <NavigationItem to="/lounge/my">마이라운지</NavigationItem>
         </NavigationList>
@@ -109,13 +112,16 @@ function Header() {
               <Button
                 width="115px"
                 height="38px"
-                style={{ border: "1px solid black", marginLeft: "20px" }}
+                style={{ border: "1px solid black", marginLeft: "16px" }}
                 onClick={() => routeChange("register")}
               >
                 Sign Up
               </Button>
             </>
           )}
+          <MobileNavButton onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}>
+            <AiOutlineMenu />
+          </MobileNavButton>
         </HeaderRightMenu>
       </HeaderInner>
     </HeaderContainer>

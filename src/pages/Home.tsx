@@ -99,8 +99,7 @@ function Home() {
         carouselItem={carouselItem}
         carouselOptions={carouselOptions}
         style={{
-          marginBottom: "5%",
-          height: "calc(min(100vw * 9 / 16, 260px))",
+          marginBottom: "20px",
         }}
       />
 
