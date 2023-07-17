@@ -102,10 +102,12 @@ https://xd.adobe.com/view/cb1bbc93-c94f-4062-946c-d2a837afc36f-9e48/
 
 스타일 코드를 인라인으로 붙이는 것을 최소화하고 코드의 구조를 보다 명확히 파악할 수 있도록 styled-components를 사용하고, style 파일은 별도의 모듈로 분리하였습니다. 반복 사용되는 스타일 코드는 theme.tsx에서 변수로 선언하였습니다.
 
-또한 성능 최적화를 위해 react-query의 캐시 기능을 활용. recoil, useEffect 훅을 함께 사용해 데이터를 fetch하는 커스텀 훅을 만들었습니다. 빌드 시 JS 파일의 크기를 줄이기 위해 다이나믹 임포트를 통해 코드 스플리팅을 하였습니다.
+또한 성능 최적화를 위해 react-query의 캐시 기능을 활용하고자 하였고 recoil, useEffect 훅을 함께 사용해 데이터를 fetch하는 커스텀 훅을 만들었고, 이미지 압축 라이브러리와 lazyloading를 사용하여 이미지 최적화를 적용하였습니다.
+
+빌드 시 JS 파일의 크기를 줄이기 위해 다이나믹 임포트를 통해 코드 스플리팅을 하였습니다.
 
 백엔드 서버를 구축하지 않고도 손쉽게 Auth, Database와 Storage기능을 사용할 수 있어 Firebase를 서버 기술로 채택하고,
-사용자가 늘어났을 때를 고려하여 그룹 포스트, 좋아요, 댓글을 별도의 컬렉션으로 분리한 DB 설계를 하였습니다.
+사용자가 늘어났을 때를 고려하여 그룹 포스트, 좋아요, 댓글을 별도의 컬렉션으로 분리한 설계를 하였습니다.
 
 ### 프로젝트 구조
 
@@ -189,11 +191,14 @@ recoil과 react-query에서의 파일은 모듈화하여 별도의 디렉토리�
 └── yarn.lock
 ```
 
+</br>
+
 ## 주요 서비스 화면 데모 보기
 
 <div align="center">
 
-<a href="https://youtu.be/bc8YmDBTdZ4"><img style="width:100%; max-width: 400px;" src=https://markdown-videos.deta.dev/youtube/bc8YmDBTdZ4></a></img>
+[![Watch the video](https://github.com/geniee1220/project-doing/assets/110911811/02f8e78e-6282-4106-b8f0-2bb12c5eff55)](https://youtu.be/bc8YmDBTdZ4)
+[유튜브에서 데모 영상 확인하기](https://youtu.be/bc8YmDBTdZ4)
 
 </div>
 
@@ -228,6 +233,70 @@ recoil과 react-query에서의 파일은 모듈화하여 별도의 디렉토리�
 ![my_lounge](https://github.com/geniee1220/project-doing/assets/110911811/48f3355e-a2ea-43cd-8fb5-28eaa55fed62)
 
 </div>
+
+</br>
+
+## 기술 특장점
+
+### Data Fetching Custom Hook
+
+```tsx
+async function fetchGroups(): Promise<GroupModel[]> {
+  try {
+    // groups 컬렉션의 모든 문서 가져오기
+    const snapshot = await getDocs(
+      query(collection(db, 'groups'), orderBy('updatedAt', 'desc'))
+    );
+
+    const groups: GroupModel[] = snapshot.docs.map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as GroupModel)
+    );
+
+    return groups;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+function useGroups() {
+  const [groups, setGroups] = useRecoilState(groupsState);
+  const [isLoading, setLoading] = useRecoilState(groupsLoadingState);
+
+  // 데이터를 가져오는 쿼리
+  const query = useQuery<GroupModel[] | undefined>('groups', fetchGroups, {
+    refetchOnWindowFocus: false,
+  });
+
+  // 데이터가 업데이트 되면 groups 상태를 업데이트
+  useEffect(() => {
+    if (query.data) {
+      setGroups(query.data);
+    }
+  }, [query.data, setGroups]);
+
+  // 로딩 상태가 바뀌면 로딩 상태를 업데이트
+  useEffect(() => {
+    if (query.isLoading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [query.isLoading, setLoading]);
+
+  // 데이터와, 로딩 상태를 반환
+  return {
+    ...query,
+    isLoading: query.isLoading,
+  };
+}
+
+export { useGroups };
+```
 
 <br/>
 
