@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from 'react';
 
-import { db } from "../../../firebase.tsx";
+import { db } from '../../../firebase.tsx';
 import {
   collection,
   doc,
@@ -9,32 +9,32 @@ import {
   where,
   updateDoc,
   deleteDoc,
-} from "firebase/firestore";
+} from 'firebase/firestore';
 
 // react-router
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from 'react-router';
 
 // apis
 import {
   ApplicantModel,
   GroupModel,
   useGroups,
-} from "../../apis/groups/index.tsx";
-import { AuthContext } from "../../apis/user/index.tsx";
+} from '../../apis/groups/index.tsx';
+import { AuthContext } from '../../apis/user/index.tsx';
 
-import { useRecoilValue } from "recoil";
-import { userState } from "../../atoms/userState.tsx";
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../atoms/userState.tsx';
 // components
-import { IoArrowBack } from "react-icons/io5";
-import MainTemplate from "../../components/templates/MainTemplate.tsx/index.tsx";
-import SectionTemplate from "../../components/templates/SectionTemplate.tsx/index.tsx";
-import Card from "../../components/organisms/Group/GroupCard/index.tsx";
-import StyledLink from "../../components/atoms/StyledLink/StyledLink.style.tsx";
-import Loader from "../../components/atoms/Loader/index.tsx";
-import Button from "../../components/atoms/Button/index.tsx";
-import Comment from "../../components/organisms/Comment/index.tsx";
-import { useComments } from "../../apis/comments/index.tsx";
-import ConfirmModal from "../../components/organisms/Modal/Confirm/index.tsx";
+import { IoArrowBack } from 'react-icons/io5';
+import MainTemplate from '../../components/templates/MainTemplate.tsx/index.tsx';
+import SectionTemplate from '../../components/templates/SectionTemplate.tsx/index.tsx';
+import Card from '../../components/organisms/Group/GroupCard/index.tsx';
+import StyledLink from '../../components/atoms/StyledLink/StyledLink.style.tsx';
+import Loader from '../../components/atoms/Loader/index.tsx';
+import Button from '../../components/atoms/Button/index.tsx';
+import Comment from '../../components/organisms/Comment/index.tsx';
+import { useComments } from '../../apis/comments/index.tsx';
+import ConfirmModal from '../../components/organisms/Modal/Confirm/index.tsx';
 
 function GroupDetail() {
   const { id: docId } = useParams();
@@ -46,8 +46,8 @@ function GroupDetail() {
   const [currentData, setCurrentData] = useState<GroupModel>();
 
   // firebase
-  const groupCollectionRef = collection(db, "groups");
-  const commentCollectionRef = collection(db, "comments");
+  const groupCollectionRef = collection(db, 'groups');
+  const commentCollectionRef = collection(db, 'comments');
 
   // 그룹 지원
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
@@ -59,14 +59,14 @@ function GroupDetail() {
 
   // 댓글 삭제 모달
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
-  const [selectedCommentId, setSelectedCommentId] = useState("");
-  const [deleteCommentItem, setDeleteCommentItem] = useState("");
+  const [selectedCommentId, setSelectedCommentId] = useState('');
+  const [deleteCommentItem, setDeleteCommentItem] = useState('');
 
   // group 데이터에서 현재 페이지에 해당하는 데이터만 추출(docId)
   useEffect(() => {
     const currentPageData = group?.filter((data) => data.id === docId);
     if (!currentPageData) {
-      return console.log("결과가 없습니다.");
+      return console.log('결과가 없습니다.');
     }
     setCurrentData(currentPageData[0]);
   }, [group, docId]);
@@ -95,7 +95,7 @@ function GroupDetail() {
   const getDocData = async () => {
     const documentQuery = query(
       commentCollectionRef,
-      where("docId", "==", docId)
+      where('docId', '==', docId)
     );
     const docSnap = await getDocs(documentQuery);
 
@@ -104,18 +104,16 @@ function GroupDetail() {
 
   // (글)그룹 삭제 로직
   const deleteGroup = async () => {
-    await deleteDoc(doc(groupCollectionRef, docId));
-
     // 댓글 삭제
     const docSnap = await getDocData();
     const commentDoc = docSnap.docs[0];
     deleteDoc(doc(commentCollectionRef, commentDoc.id));
 
     // 좋아요 삭제 likes 컬렉션에서 해당 docId 삭제
-    const likesCollectionRef = collection(db, "likes");
+    const likesCollectionRef = collection(db, 'likes');
     const currentUserQuery = query(
       likesCollectionRef,
-      where("uid", "==", currentUser)
+      where('uid', '==', currentUser)
     );
     const currentUserSnapshot = await getDocs(currentUserQuery);
     const likesData = currentUserSnapshot.docs[0].data();
@@ -129,8 +127,11 @@ function GroupDetail() {
       });
     }
 
+    // 그룹 삭제
+    await deleteDoc(doc(groupCollectionRef, docId));
+
     setIsDeleteGroupModalOpen(false);
-    navigate(-1);
+    navigate('/studygroup');
   };
 
   // 댓글 삭제 모달 로직
@@ -147,7 +148,7 @@ function GroupDetail() {
   // 그룹 지원 로직
   const handleApplyGroupModal = async () => {
     if (!currentUser) {
-      return navigate("/login");
+      return navigate('/login');
     }
     setIsApplyModalOpen(true);
   };
@@ -207,7 +208,7 @@ function GroupDetail() {
     <MainTemplate pageName="studyGroupRecruit" contentsWidth="920px">
       {/* 뒤로가기 버튼 */}
       <StyledLink to="/studygroup">
-        <IoArrowBack style={{ marginRight: "5px" }} />
+        <IoArrowBack style={{ marginRight: '5px' }} />
         뒤로가기
       </StyledLink>
 
@@ -221,9 +222,9 @@ function GroupDetail() {
             <>
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "0 10px",
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: '0 10px',
                 }}
               >
                 <Button
@@ -237,7 +238,7 @@ function GroupDetail() {
                 <StyledLink
                   type="button"
                   to={`/studygroup/edit/${docId}`}
-                  style={{ fontSize: "16px" }}
+                  style={{ fontSize: '16px' }}
                 >
                   모집글 수정
                 </StyledLink>
@@ -251,9 +252,9 @@ function GroupDetail() {
           (isApply || isRegistered ? (
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "0 10px",
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '0 10px',
               }}
             >
               <Button
@@ -261,15 +262,15 @@ function GroupDetail() {
                 rounded
                 onClick={handleApplyGroupModal}
               >
-                {isApply ? "지원 취소" : isRegistered ? "스터디 그룹 탈퇴" : ""}
+                {isApply ? '지원 취소' : isRegistered ? '스터디 그룹 탈퇴' : ''}
               </Button>
             </div>
           ) : (
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "0 10px",
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '0 10px',
               }}
             >
               <Button
@@ -295,16 +296,16 @@ function GroupDetail() {
         <ConfirmModal
           title={
             isApply || isRegistered
-              ? "스터디 그룹 지원 취소"
-              : "스터디 그룹 지원"
+              ? '스터디 그룹 지원 취소'
+              : '스터디 그룹 지원'
           }
           message={
             <>
               {currentData?.title}
               <br />
               {isApply
-                ? "스터디 그룹 지원을 취소하시겠습니까?"
-                : "스터디 그룹에 지원 하시겠습니까?"}
+                ? '스터디 그룹 지원을 취소하시겠습니까?'
+                : '스터디 그룹에 지원 하시겠습니까?'}
             </>
           }
           onConfirm={
