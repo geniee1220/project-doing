@@ -1,16 +1,16 @@
-import { useEffect } from "react";
-import { useQuery } from "react-query";
-import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil";
-import { groupsLoadingState, groupsState } from "../../atoms/groupState";
+import { useEffect } from 'react';
+import { useQuery } from 'react-query';
+import { useRecoilCallback, useRecoilState, useSetRecoilState } from 'recoil';
+import { groupsLoadingState, groupsState } from '../../atoms/groupState';
 
-import { db } from "../../../firebase";
+import { db } from '../../../firebase';
 import {
   query,
   collection,
   getDocs,
   orderBy,
   Timestamp,
-} from "firebase/firestore";
+} from 'firebase/firestore';
 
 export interface ApplicantModel {
   nickname: string;
@@ -37,7 +37,7 @@ async function fetchGroups(): Promise<GroupModel[]> {
   try {
     // groups 컬렉션의 모든 문서 가져오기
     const snapshot = await getDocs(
-      query(collection(db, "groups"), orderBy("updatedAt", "desc"))
+      query(collection(db, 'groups'), orderBy('updatedAt', 'desc'))
     );
 
     const groups: GroupModel[] = snapshot.docs.map(
@@ -60,7 +60,7 @@ function useGroups() {
   const [isLoading, setLoading] = useRecoilState(groupsLoadingState);
 
   // 데이터를 가져오는 쿼리
-  const query = useQuery<GroupModel[] | undefined>("groups", fetchGroups, {
+  const query = useQuery<GroupModel[] | undefined>('groups', fetchGroups, {
     refetchOnWindowFocus: false,
   });
 

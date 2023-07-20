@@ -14,8 +14,9 @@ import {
 import { AuthContext } from "../../../../apis/user";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
-import styledComponent from "./GroupLike.style";
 import { useNavigate } from "react-router";
+
+import styledComponent from "./GroupLike.style";
 const { GroupLikeButton } = styledComponent;
 
 interface GroupLikeProps {

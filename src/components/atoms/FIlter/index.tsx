@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import { AiFillCaretDown } from "react-icons/ai";
-import { BsChevronDown } from "react-icons/bs";
-import { BiChevronDown } from "react-icons/bi";
+import React, { useState } from 'react';
+import { BiChevronDown } from 'react-icons/bi';
 
-import styledComponent from "./Filter.style";
+import styledComponent from './Filter.style';
 const {
   FilterContainer,
   SelectedItem,
@@ -32,8 +30,8 @@ function Filter({
           {selectedCategory ? selectedCategory : categories[0]}
           <BiChevronDown
             style={{
-              marginRight: "10px",
-              marginLeft: "auto",
+              marginRight: '10px',
+              marginLeft: 'auto',
             }}
           />
         </SelectedItemLabel>

@@ -45,6 +45,7 @@ const SectionContainer = styled.section<SectionTemplateCSSProps>`
   width: 100%;
   max-width: ${(props) => props.contentsWidth || "100%"};
   margin: 0 auto;
+
   ${({ border }) =>
     border &&
     css`

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import { GroupModel } from "../../../apis/groups";
+import { GroupModel } from '../../../apis/groups';
 
 // icon
-import { FiSearch } from "react-icons/fi";
-import { IoCloseOutline } from "react-icons/io5";
-import { VscChromeClose } from "react-icons/vsc";
+import { FiSearch } from 'react-icons/fi';
+import { IoCloseOutline } from 'react-icons/io5';
+import { VscChromeClose } from 'react-icons/vsc';
 
 // styled-components
-import styledComponent from "./SearchBar.style";
-import Filter from "../../atoms/FIlter";
-import { useLocation } from "react-router";
+import styledComponent from './SearchBar.style';
+import Filter from '../../atoms/FIlter';
+import { useLocation } from 'react-router';
 
 const {
   SearchBarContainer,
@@ -28,13 +28,13 @@ interface SearchBarProps {
   setFilteredPosts: any;
 }
 
-const categories = ["모든 그룹", "활성화 그룹", "태그"];
+const categories = ['모든 그룹', '활성화 그룹', '태그'];
 
 function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const MAX_SEARCH_HISTORY = 5;
 
@@ -42,11 +42,11 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const searchQuery = searchParams.get("tag");
+    const searchQuery = searchParams.get('tag');
 
     if (searchQuery !== null) {
       setSearchQuery(searchQuery);
-      setSelectedCategory("태그");
+      setSelectedCategory('태그');
     }
 
     handleSearch();
@@ -59,7 +59,7 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
 
   // 검색어 입력창에서 엔터키 입력 시 검색
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    event.key === "Enter" && handleSearch();
+    event.key === 'Enter' && handleSearch();
   };
 
   // 검색 기능 구현
@@ -69,18 +69,18 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
     let filtered: GroupModel[] | undefined;
 
     const filterByCategory = (group: GroupModel) => {
-      if (selectedCategory === "활성화 그룹") {
+      if (selectedCategory === '활성화 그룹') {
         return Number(group.member_count) !== Number(group.members.length) + 1;
-      } else if (selectedCategory === "태그") {
+      } else if (selectedCategory === '태그') {
         return group.tag.some((tag) => tag.includes(searchTerm));
       }
       return true;
     };
 
-    if (searchTerm.trim() === "") {
+    if (searchTerm.trim() === '') {
       filtered = groups?.filter(filterByCategory);
     } else {
-      if (selectedCategory === "태그") {
+      if (selectedCategory === '태그') {
         // groups의 tag 배열에서 searchTerm을 포함하는 태그가 있는지 확인
         filtered = groups?.filter((group) =>
           group.tag.some((tag) => tag.toLowerCase().includes(searchTerm))
@@ -98,7 +98,7 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
     setFilteredPosts(filtered);
 
     //  검색 기록에 추가
-    if (searchTerm.trim() !== "") {
+    if (searchTerm.trim() !== '') {
       setSearchHistory((prevHistory) => {
         const updatedHistory = prevHistory
           .filter((query) => query !== searchQuery)
@@ -124,13 +124,13 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
   // 검색어 입력창 초기화(전체 검색 기록)
   const clearSearchHistory = () => {
     setSearchHistory([]);
-    setSearchQuery("");
+    setSearchQuery('');
     setIsSearching(false);
   };
 
   // 검색 후 검색어 입력창 초기화
   const resetSearchQuery = () => {
-    if (selectedCategory === "Activation Group") {
+    if (selectedCategory === 'Activation Group') {
       setFilteredPosts(
         groups?.filter(
           (group) =>
@@ -141,7 +141,7 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
       setFilteredPosts(groups);
     }
 
-    setSearchQuery("");
+    setSearchQuery('');
     setIsSearching(false);
   };
 
@@ -167,9 +167,9 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
             onClick={isSearching ? resetSearchQuery : handleSearch}
           >
             {isSearching ? (
-              <VscChromeClose style={{ width: "28px", height: "28px" }} />
+              <VscChromeClose style={{ width: '28px', height: '28px' }} />
             ) : (
-              <FiSearch style={{ width: "28px", height: "28px" }} />
+              <FiSearch style={{ width: '28px', height: '28px' }} />
             )}
           </SearchBarSubmitButton>
         </SearchBarInner>
@@ -179,8 +179,8 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
       <SearchHistoryContainer
         style={
           searchHistory.length > 0
-            ? { visibility: "visible" }
-            : { visibility: "hidden" }
+            ? { visibility: 'visible' }
+            : { visibility: 'hidden' }
         }
       >
         <SearchHistoryList>
@@ -192,7 +192,7 @@ function SearchBar({ groups, setFilteredPosts }: SearchBarProps) {
               <button
                 type="button"
                 onClick={() => handleRemoveSearchHistoryItem(query)}
-                style={{ marginLeft: "5px" }}
+                style={{ marginLeft: '5px' }}
               >
                 <IoCloseOutline />
               </button>
