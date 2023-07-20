@@ -62,6 +62,8 @@ function useGroups() {
   // 데이터를 가져오는 쿼리
   const query = useQuery<GroupModel[] | undefined>('groups', fetchGroups, {
     refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 3,
+    cacheTime: 1000 * 60 * 5,
   });
 
   // 데이터가 업데이트 되면 groups 상태를 업데이트
