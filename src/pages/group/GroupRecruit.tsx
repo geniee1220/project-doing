@@ -16,6 +16,8 @@ import { useForm } from 'react-hook-form';
 import { AuthContext } from '../../apis/user/index.tsx';
 import { useNavigate } from 'react-router';
 
+import imageCompression from 'browser-image-compression';
+
 // components
 import MainTemplate from '../../components/templates/MainTemplate.tsx/index.tsx';
 import SectionTemplate from '../../components/templates/SectionTemplate.tsx/index.tsx';
@@ -27,7 +29,6 @@ import CheckboxGroup from '../../components/atoms/Form/Checkbox/index.tsx';
 import FileUploader from '../../components/molecules/FileUploader/index.tsx';
 import Loader from '../../components/atoms/Loader/index.tsx';
 import AlertModal from '../../components/organisms/Modal/Alert/index.tsx';
-import { useGroups } from '../../apis/groups/index.tsx';
 
 // 하위 컴포넌트로 전달할 상수 props
 const radioOptions = [
@@ -92,12 +93,17 @@ function GroupRecruit() {
 
   // 이미지 업로드
   const uploadImage = async (file: File) => {
-    setImgUploading(true);
-    const storageRef = ref(storage, `images/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
     try {
-      await uploadTask;
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+      };
+      const compressedFile = await imageCompression(file, options);
+
+      setImgUploading(true);
+      const storageRef = ref(storage, `images/${file.name}`);
+      const uploadTask = await uploadBytesResumable(storageRef, compressedFile);
       const downloadURL = await getDownloadURL(storageRef);
       setImgUploading(false);
       return downloadURL;
