@@ -304,7 +304,7 @@ export { useGroups };
 
 프로젝트를 진행하며 중복 코드 사용을 최소화하기 위해 함수 모듈화를 진행하고자 하였으나, 시간적 여유 부족으로 완료하지 못한 점이 아쉬웠습니다.
 
-배포 후 Lighthouse로 성능 체크를 해보니 77점이어서 개선점을 찾아 보는 과정에서 빌드 시 메세지 'Some chunks are larger than 500 kBs after minification' 경고 문구를 확인할 수 있었습니다. 청크 분리를 위해 Vite 플러그인 중 하나인 vite-plugin-compression을 적용하였더니, Lighthouse 성능 점수가 기존의 77점에서 84점으로 상승하는 결과를 도출하여 뿌듯했습니다.
+배포 후 Lighthouse로 성능 체크를 해보니 77점이어서 개선점을 찾아 보는 과정에서 빌드 시 메세지 'Some chunks are larger than 500 kBs after minification' 경고 문구를 확인할 수 있었습니다. 청크 분리를 위해 Vite 플러그인 중 하나인 vite-plugin-compression을 적용하였더니, Lighthouse 성능 점수가 기존의 77점에서 84점으로 상승하는 결과를 얻을 수 있었습니다.
 
 그러나 성능 최적화를 위해 이미지 최적화, 다이나믹 임포트 등을 보다 적극적으로 활용하는 등 개선할 부분이 많다는 것을 느꼈습니다.
 
